@@ -261,6 +261,7 @@ main{padding-bottom:200px}
 .pkeys{display:grid;grid-template-columns:repeat(3,72px);gap:14px;justify-content:center}
 .pkey{width:72px;height:72px;border-radius:50%;border:0;background:var(--sky2);color:var(--ink);font:700 26px Mali,sans-serif;cursor:pointer}
 .pkey:active{transform:scale(.94)}
+.lineauto{width:100%;min-height:58px;border:0;border-radius:16px;background:#06c755;color:#fff;font:700 19px Mali,sans-serif;cursor:pointer;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15)}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:16px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;z-index:9}
 .toast.on{opacity:1;transform:translateX(-50%)}
@@ -547,11 +548,13 @@ $("veil").addEventListener("click",async e=>{if(e.target===$("veil"))return clos
   if(b.dataset.sheet==="addperson"){editContact="new";renderSheet();$("cName").focus();return}
   if(b.dataset.sheet==="cancelperson"){editContact="";renderSheet();return}
   if(b.dataset.sheet==="saveperson"&&db){const isB=editContact==="buddy",name=isB?"Buddy":($("cName")?.value||"").trim(),phone=($("cPhone")?.value||"").trim();if(!name)return;
-    const cols=["#ff6fae","#4a74ff","#8c6cff","#22b8cf","#ff7a45"],lang=isB?"th":$("cLang").value;
-    try{if(editContact==="new")await db.collection("contacts").add({name,phone,lang,color:cols[Object.keys(contacts).length%cols.length],at:new Date().toISOString()});
-      else if(contacts[editContact])await db.doc("contacts/"+editContact).update(isB?{phone}:{name,phone,lang});
-      else await db.doc("contacts/"+editContact).set({name,phone,lang,at:new Date().toISOString()});
+    const cols=["#ff6fae","#4a74ff","#8c6cff","#22b8cf","#ff7a45"],lang=isB?"th":$("cLang").value,lu=$("cLine")?{lineUserId:$("cLine").value}:{};
+    try{if(editContact==="new")await db.collection("contacts").add({name,phone,lang,...lu,color:cols[Object.keys(contacts).length%cols.length],at:new Date().toISOString()});
+      else if(contacts[editContact])await db.doc("contacts/"+editContact).update(isB?{phone,...lu}:{name,phone,lang,...lu});
+      else await db.doc("contacts/"+editContact).set({name,phone,lang,...lu,at:new Date().toISOString()});
       editContact="";draft="";renderSheet()}catch(err){toast(L().ro)}return}
+  if(b.dataset.sheet==="lineauto"&&window.lrLine){const to=sendTo==="everyone"?contactList().map(([,x])=>x.lineUserId).filter(Boolean):[curC().lineUserId];b.disabled=true;b.textContent="…";
+    try{await window.lrLine.send(to,draft);toast(isTh()?"ส่งทาง LINE แล้ว ✓":"Sent on LINE ✓");closeSheet()}catch(err){toast((isTh()?"ส่งไม่สำเร็จ: ":"LINE didn't send: ")+(err?.message||""));b.disabled=false;b.textContent="✓ Send on LINE now"}return}
   if(b.dataset.sheet==="resetmsg"){freshDraft();renderSheet();return}
   if(b.dataset.sheet==="copymsg"){const txt=draft;try{await navigator.clipboard.writeText(txt);toast(L().copied||"Copied")}catch(err){toast(txt.slice(0,140))}return}
   if(b.dataset.sheet==="edit"){bringEdit=!bringEdit;addingItem=false;rerenderBring();return}
@@ -661,8 +664,9 @@ function msgFor(lang,name){if(!sendCtx)return"";let th,en;
   const link="";if(lang==="th")return(name?"สวัสดี "+name+" 👋\n":"สวัสดีครับน้องชาย 😊\n")+th+link;if(lang==="both")return en+"\n\n— 🇹🇭 —\n"+th+link;return(name?"Hi "+name+"! 👋\n":"")+en+link}
 const normPhone=v=>{let d=String(v||"").replace(/[^0-9+]/g,"");if(d.startsWith("+"))d=d.slice(1);else if(d.startsWith("00"))d=d.slice(2);else if(d.startsWith("0"))return "66"+d.slice(1);if(d.startsWith("660"))d="66"+d.slice(3);return d;if(d.startsWith("0"))return "66"+d.slice(1);return d};
 const waHref=(ph,t)=>"https://wa.me/"+normPhone(ph)+"?text="+encodeURIComponent(t);
-const contactList=()=>{const b=contacts.buddy||{};return[["buddy",{name:!isTh()?"My buddy":"บัดดี้",lang:"th",color:"#ffcc00",fixed:true,phone:b.phone||""}],...Object.entries(contacts).filter(([id])=>id!=="buddy").sort((a,b)=>(a[1].at||"").localeCompare(b[1].at||""))]};
-let editContact="",sendTo="buddy",draft="",draftFor="";
+const contactList=()=>{const b=contacts.buddy||{};return[["buddy",{name:!isTh()?"My buddy":"บัดดี้",lang:"th",color:"#ffcc00",fixed:true,phone:b.phone||"",lineUserId:b.lineUserId||""}],...Object.entries(contacts).filter(([id])=>id!=="buddy").sort((a,b)=>(a[1].at||"").localeCompare(b[1].at||""))]};
+let editContact="",sendTo="buddy",draft="",draftFor="",lineFollowers={};
+const hasLine=()=>!!window.lrLine;
 function curC(){if(sendTo==="everyone")return{name:L().everyone,lang:"both",phone:""};const c=contactList().find(([id])=>id===sendTo);return c?c[1]:contactList()[0][1]}
 function freshDraft(){const c=curC();draft=msgFor(c.lang,c.fixed||sendTo==="everyone"?"":c.name);draftFor=sendTo}
 function sendSheet(){const l=L(),f=fam();if(!contactList().some(([id])=>id===sendTo)&&sendTo!=="everyone")sendTo="buddy";if(draftFor!==sendTo||!draft)freshDraft();const c=curC();
@@ -675,10 +679,12 @@ function sendSheet(){const l=L(),f=fam();if(!contactList().some(([id])=>id===sen
    ${ec?`<div class="card" style="padding:16px;display:grid;gap:10px;box-shadow:0 0 0 2px var(--line)">${ec.fixed?`<b>${esc(ec.name)}</b>`:`<label>${l.pName}<input type="text" id="cName" value="${esc(ec.name)}" placeholder="Mum, Oldest, Grandma"></label>`}
      <label>Phone number<input type="tel" id="cPhone" value="${esc(ec.phone||"")}" placeholder="081 234 5678 or +44 7700 900123"></label>
      ${ec.fixed?"":`<label>${l.pLang}<select id="cLang"><option value="en"${ec.lang!=="th"?" selected":""}>English</option><option value="th"${ec.lang==="th"?" selected":""}>ภาษาไทย (Thai)</option></select></label>`}
+     ${hasLine()?`<label>LINE account<select id="cLine"><option value="">Not linked</option>${Object.values(lineFollowers).sort((a,b)=>(b.at||"").localeCompare(a.at||"")).map(f=>`<option value="${esc(f.userId)}"${f.userId===(ec.lineUserId||"")?" selected":""}>${esc(f.displayName||"LINE user")}${f.lastText?" · “"+esc(f.lastText.slice(0,20))+"”":""}</option>`).join("")}</select></label><p class="hint" style="margin:0">Not listed? Ask them to add the Let's Roll LINE account as a friend, then reopen this.</p>`:""}
      <p class="hint" style="margin:0">Thai numbers starting with 0 get +66 added. For other countries, type the + code.</p>
      <div class="row"><button class="btn main" type="button" data-sheet="saveperson">Save</button><button class="btn ghost" type="button" data-sheet="cancelperson">Cancel</button></div></div>`:""}
    <label>Message <span class="hint" style="font-weight:400;margin:0">(edit anything before sending)</span><textarea id="msgBox" style="min-height:220px;font-size:15px;line-height:1.45">${esc(draft)}</textarea></label>
    <div class="row" style="justify-content:space-between"><button type="button" class="lnk" data-sheet="resetmsg">↺ Reset message</button><span class="hint" id="msgLen" style="margin:0">${draft.length} characters</span></div>
+   ${hasLine()&&(sendTo==="everyone"?contactList().some(([,x])=>x.lineUserId):c.lineUserId)?`<button type="button" class="lineauto" data-sheet="lineauto">✓ ${isTh()?"ส่งทาง LINE เลย":"Send on LINE now"}${sendTo==="everyone"?" ("+contactList().filter(([,x])=>x.lineUserId).length+")":""}</button>`:""}
    <div class="sendbtns">${c.phone?`<a class="wa" id="waBtn" href="${esc(waHref(c.phone,draft))}" target="_blank" rel="noopener">WhatsApp ${esc(c.name)}</a>`:""}${isPhone?`<a class="ln" id="lnApp" href="${esc("line://msg/text/"+encodeURIComponent(draft))}">LINE app</a>`:""}<a class="ln" id="lnBtn" href="${esc(lineHref(draft))}" target="_blank" rel="noopener" style="${isPhone?"background:#0a9e4a":""}">${isPhone?"LINE (web)":"LINE"}</a><button class="btn ghost" type="button" data-sheet="copymsg">Copy</button></div>
    ${!c.phone&&sendTo!=="everyone"?`<p class="hint" style="margin:0">Add ${esc(c.name)}'s number to send straight to their WhatsApp.</p>`:""}`}
 document.addEventListener("input",e=>{if(e.target.id!=="msgBox")return;draft=e.target.value;$("msgLen").textContent=draft.length+" characters";const c=curC();if($("waBtn"))$("waBtn").href=waHref(c.phone,draft);$("lnBtn").href=lineHref(draft);if($("lnApp"))$("lnApp").href="line://msg/text/"+encodeURIComponent(draft)});
@@ -716,6 +722,7 @@ render();
     if(plan&&!$("planner").hidden){renderHead();renderUpcoming()}else render()},
     ()=>{clearTimeout(timer);$("conn").textContent=L().late});
   db.doc("settings/buddy").onSnapshot(d=>{buddyPin=d.exists&&d.data().pin?String(d.data().pin):null},()=>{});
+  if(window.lrLine)db.collection("linefollowers").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.userId)o[x.id]=v});lineFollowers=o;if(sheetOpen&&sheetKind==="send"&&editContact)renderSheet()},()=>{});
   db.collection("contacts").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});contacts=o;if(sheetOpen&&sheetKind==="send")renderSheet()},()=>{});
   db.collection("items").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});customItems=o;if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});
   db.doc("settings/items").onSnapshot(d=>{hiddenItems=d.exists&&Array.isArray(d.data().hidden)?d.data().hidden:[];if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});

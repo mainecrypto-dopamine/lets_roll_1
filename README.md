@@ -46,6 +46,16 @@ Your family's addresses, phone numbers and photos are **not** in this repo. They
 1. At [vercel.com](https://vercel.com), sign in with GitHub, then **Add New → Project → lets_roll_1 → Deploy**. No settings needed.
 2. You get an address like `lets-roll-1.vercel.app`. Open it on each phone, sign in, then **Share → Add to Home Screen**.
 
+### 6. Automatic LINE messages (optional, recommended)
+Personal LINE accounts can't be sent from by apps, so Let's Roll sends from its own **LINE Official Account**.
+1. Go to [manager.line.biz](https://manager.line.biz) and create an Official Account called **Let's Roll**. Pick the free plan.
+2. In its **Settings → Messaging API**, turn on the Messaging API. Then open the [LINE Developers Console](https://developers.line.biz/console/) → your channel → **Messaging API** tab, and issue a **Channel access token (long-lived)**. Copy the **Channel secret** from the **Basic settings** tab.
+3. In Supabase, go to **Edge Functions → Secrets** and add `LINE_CHANNEL_ACCESS_TOKEN` and `LINE_CHANNEL_SECRET`. Never put these in `config.js` or anywhere in this repo.
+4. Deploy two functions from `supabase/functions/`: **line-send**, and **line-webhook** with **Enforce JWT verification turned OFF**.
+5. In the LINE Developers Console, set the **Webhook URL** to `https://YOUR-PROJECT.supabase.co/functions/v1/line-webhook`, then turn **Use webhook** on.
+6. In `config.js`, set `lineEnabled: true`.
+7. Have your buddy and family **add the Let's Roll LINE account as a friend** (scan its QR code in LINE Official Account Manager). In the app, open **Send via LINE / WhatsApp → Edit** for each person and pick their LINE name. Then the green **Send on LINE now** button sends instantly.
+
 ### Adding people
 Only emails in the `members` table can sign in. Add someone in **SQL Editor**:
 

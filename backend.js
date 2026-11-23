@@ -172,6 +172,18 @@
     resolveReady();
   }
 
+  // LINE Official Account sending (only once you've set it up and turned on lineEnabled in config.js)
+  if (sb && cfg.lineEnabled) {
+    window.lrLine = {
+      send: async (to, text) => {
+        const { data, error } = await sb.functions.invoke("line-send", { body: { to, text } });
+        if (error) throw { message: error.message };
+        if (!data?.ok) throw { message: (data?.results || []).filter(r => !r.ok).map(r => r.status).join(", ") || data?.error || "failed" };
+        return data;
+      }
+    };
+  }
+
   const caps = { db, user, sample };
   window.claude = {
     use: async name => {
