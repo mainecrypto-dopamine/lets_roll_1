@@ -56,6 +56,13 @@ Personal LINE accounts can't be sent from by apps, so Let's Roll sends from its 
 6. In `config.js`, set `lineEnabled: true`.
 7. Have your buddy and family **add the Let's Roll LINE account as a friend** (scan its QR code in LINE Official Account Manager). In the app, open **Send via LINE / WhatsApp → Edit** for each person and pick their LINE name. Then the green **Send on LINE now** button sends instantly.
 
+### 7. Sign in with Google (optional)
+1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project, set up the **OAuth consent screen** (External, app name Let's Roll), then **Create credentials → OAuth client ID → Web application**.
+2. Under **Authorized redirect URIs**, add `https://vtwbpuftoktwddkehqxb.supabase.co/auth/v1/callback`.
+3. Copy the **Client ID** and **Client secret** into Supabase: **Authentication → Sign In / Providers → Google**, turn it on, and save.
+4. In Supabase **Authentication → URL Configuration**, set the **Site URL** to your app's address.
+5. In `config.js`, set `googleSignIn: true`.
+
 ### Adding people
 Only emails in the `members` table can sign in. Add someone in **SQL Editor**:
 
