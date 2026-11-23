@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#141416">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Let's Roll">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
@@ -30,27 +30,27 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Anuphan,system-ui,sans-serif;overflow-x:clip}
 button,input,textarea{font:inherit;color:inherit}
 h1,h2,h3,.fun{font-family:Mali,Anuphan,sans-serif}
-.sky{background:#141416;color:#fff;padding:calc(18px + env(safe-area-inset-top)) max(5vw,16px) 0;position:relative;overflow:hidden}
-.road{position:relative;height:34px;margin:0 calc(-1*max(5vw,16px));background:#2a2a2c;overflow:hidden}
-.road i{position:absolute;top:15px;left:0;width:200%;height:4px;background:repeating-linear-gradient(90deg,#ffcc00 0 26px,transparent 26px 46px);animation:mv 1.2s linear infinite}
+.sky{background:var(--card);color:var(--ink);box-shadow:0 1px 0 var(--line);padding:calc(18px + env(safe-area-inset-top)) max(5vw,16px) 0;position:relative;overflow:hidden}
+.road{position:relative;height:26px;margin:0 calc(-1*max(5vw,16px));background:light-dark(#eef0f6,#23284a);overflow:hidden}
+.road i{position:absolute;top:11px;left:0;width:200%;height:4px;background:repeating-linear-gradient(90deg,light-dark(#ffffff,#3a4170) 0 26px,transparent 26px 46px);animation:mv 1.2s linear infinite}
 @keyframes mv{to{transform:translateX(-46px)}}
-.road .rl{position:absolute;bottom:2px;width:30px;height:30px;animation:rl 9s linear infinite}
-.road .rl svg{width:30px;height:30px;animation:spin .9s linear infinite;display:block}
+.road .rl{position:absolute;bottom:1px;width:24px;height:24px;animation:rl 9s linear infinite}
+.road .rl svg{width:24px;height:24px;animation:spin .9s linear infinite;display:block}
 @keyframes rl{from{left:-40px}to{left:100%}}
 .top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;max-width:900px;margin:auto}
 .brand{font:700 20px Mali,sans-serif;display:flex;gap:8px;align-items:center}
 .brand{font-size:24px}.brand svg{width:40px;height:40px}.brand .wheel{animation:spin 8s linear infinite}.brand:hover .wheel,.go:hover~* .wheel{animation-duration:1s}
-.seg{display:flex;background:#2a2a2c;border-radius:999px;padding:4px}
-.seg button{border:0;background:none;color:#fff;padding:8px 16px;border-radius:999px;min-height:40px;cursor:pointer;font-weight:600}
-.seg button[aria-pressed=true]{background:#ffcc00;color:#111}
-.stats{max-width:900px;margin:10px auto 0;font-size:15px;color:#c9c9cf}
+.seg{display:flex;background:light-dark(#f1f3f8,#262c52);border-radius:999px;padding:4px}
+.seg button{border:0;background:none;color:var(--mute);padding:8px 16px;border-radius:999px;min-height:40px;cursor:pointer;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(20,30,80,.15)}
+.stats{max-width:900px;margin:10px auto 0;font-size:15px;color:var(--mute)}
 .stats b{background:var(--sun);color:#3b2b00;border-radius:999px;padding:1px 10px;margin:0 2px}
 .week{display:flex;gap:10px;overflow-x:auto;padding:16px 2px 20px;max-width:900px;margin:auto;scrollbar-width:none}
-.day{flex:none;width:58px;height:74px;border:0;background:#2a2a2c;color:#fff;border-radius:22px;cursor:pointer;position:relative;transition:transform .15s}
+.day{flex:none;width:58px;height:74px;border:0;background:light-dark(#f1f3f8,#262c52);color:var(--ink);border-radius:22px;cursor:pointer;position:relative;transition:transform .15s}
 .day b{display:block;font:700 22px/1.1 Mali,sans-serif}.day span{font-size:13px}
-.day[aria-pressed=true]{background:#ffcc00;color:#111;transform:translateY(-3px)}
-.day i{position:absolute;top:-4px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--sun);border:3px solid #141416}
-.day i.accepted{background:#fff}.day[aria-pressed=true] i.accepted{background:#111;border-color:#ffcc00}.day i.declined{background:var(--pink)}
+.day[aria-pressed=true]{background:var(--pink);color:#fff;transform:translateY(-3px)}
+.day i{position:absolute;top:-4px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--sun);border:3px solid var(--card)}
+.day i.accepted{background:var(--sky)}.day[aria-pressed=true] i.accepted{background:var(--sky)}.day i.declined{background:var(--pink)}
 main{max-width:900px;margin:auto;padding:22px max(5vw,16px) 70px;display:grid;gap:22px}
 .card{background:var(--card);border-radius:26px;padding:22px;box-shadow:0 2px 0 var(--line),0 16px 36px -22px rgba(30,50,140,.45)}
 h2{margin:0 0 16px;font-size:clamp(26px,5vw,34px);line-height:1.1;text-wrap:balance}
@@ -252,6 +252,15 @@ main{padding-bottom:200px}
 .sendbtns{display:flex;flex-wrap:wrap;gap:10px}
 .sendbtns a{flex:1 1 140px;min-height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;font:700 18px Mali,sans-serif;color:#fff;text-decoration:none}
 .sendbtns .wa{background:#25d366}.sendbtns .ln{background:#06c755}.sendbtns .btn{min-height:54px}
+.ragehd{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:16px;color:#fff;font-weight:600;background:linear-gradient(110deg,#5b2bff,#c13cff,#ff3fa4,#ffb020,#2fd1ff,#5b2bff);background-size:300% 100%;animation:glow 6s linear infinite}
+.ragehd .lnk{color:#fff;text-decoration:underline}
+.budbtn{height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 14px Anuphan,sans-serif;cursor:pointer;white-space:nowrap}
+.budbtn[aria-pressed=true]{background:#ffcc00;border-color:#ffcc00;color:#111}
+.pdots{display:flex;justify-content:center;gap:16px;margin:8px 0 0}
+.pdot{width:18px;height:18px;border-radius:50%;border:3px solid var(--ink)}.pdot.on{background:var(--ink)}
+.pkeys{display:grid;grid-template-columns:repeat(3,72px);gap:14px;justify-content:center}
+.pkey{width:72px;height:72px;border-radius:50%;border:0;background:var(--sky2);color:var(--ink);font:700 26px Mali,sans-serif;cursor:pointer}
+.pkey:active{transform:scale(.94)}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:16px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;z-index:9}
 .toast.on{opacity:1;transform:translateX(-50%)}
@@ -262,8 +271,8 @@ main{padding-bottom:200px}
 <body>
 <header class="sky">
   <div class="top">
-    <div class="brand"><svg class="wheel" viewBox="0 0 64 64" aria-hidden="true"><use href="#offroad"/></svg>Let's <span style="color:#ffcc00">Roll</span></div>
-    <div style="display:flex;gap:10px;align-items:center"><button class="sosmini" type="button" id="sosBtn" aria-label="Emergency"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="currentColor"/></svg><span id="sosLbl">SOS</span></button><div class="seg" role="group" aria-label="Mode"><button id="mFam" type="button">Family</button><button id="mDrv" type="button">บัดดี้</button></div></div>
+    <div class="brand"><svg class="wheel" viewBox="0 0 64 64" aria-hidden="true"><use href="#offroad"/></svg>Let's <span style="color:var(--pink)">Roll</span></div>
+    <div style="display:flex;gap:10px;align-items:center"><button class="sosmini" type="button" id="sosBtn" aria-label="Emergency"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="currentColor"/></svg><span id="sosLbl">SOS</span></button><button class="budbtn" type="button" id="budBtn">🛞 <span id="budLbl">My Buddy</span></button><div class="seg" role="group" aria-label="Language"><button id="mEn" type="button">EN</button><button id="mTh" type="button">ไทย</button></div></div>
   </div>
   <p class="stats" id="stats"></p>
   <nav class="week" id="week" aria-label="Days"></nav>
@@ -298,11 +307,11 @@ main{padding-bottom:200px}
   <section id="reqBox" class="stack-col" hidden></section>
   <section class="card" id="planner" hidden>
     <h2 id="pTitle">Where to today?</h2>
-    <div class="tiles" id="tiles"></div>
-    <div class="newbox" id="newBox" hidden><input type="text" id="newIn" aria-label="New place"><button class="btn main" type="button" id="newAdd">Add</button></div>
+    <div class="sect" style="margin-top:4px"><h3 id="timeH">Pick-up time</h3><div class="times" id="times"></div></div>
+    <div class="sect"><h3 id="placesH">Destinations</h3><div class="tiles" id="tiles"></div>
+    <div class="newbox" id="newBox" hidden><input type="text" id="newIn" aria-label="New place"><button class="btn main" type="button" id="newAdd">Add</button></div></div>
     <div class="sect"><h3 id="tripH">Your trip</h3><div id="road"></div></div>
-    <div class="sect"><h3 id="timeH">Pick-up time</h3><div class="times" id="times"></div></div>
-    <div class="sect"><button type="button" class="shiny" id="nightBtn" aria-pressed="false"><span class="tick" id="nightTick">🪩</span><span><span id="nightLbl">TIME TO RAGE</span><small id="nightSub">My buddy stays with me all night</small></span></button><div class="nk" id="nightKinds" hidden><button type="button" data-nk="tequila">🥃 Bring me a bottle of tequila to the office</button><button type="button" data-nk="doink">🌿 Roll me a 4-gram doink</button><button type="button" data-nk="bender">🌙 You're gonna stay with me all night</button><button type="button" data-nk="dawn">🌅 You'll be going home before sunrise</button></div></div>
+    <div class="sect" id="rageBox" hidden><div class="ragehd"><span>🪩 <b id="nightLbl">Rage night</b></span><button type="button" class="lnk" id="rageOff">Turn off</button></div><div class="nk" id="nightKinds"><button type="button" data-nk="tequila">🥃 Bring me a bottle of tequila to the office</button><button type="button" data-nk="doink">🌿 Roll me a 4-gram doink</button><button type="button" data-nk="bender">🌙 You're gonna stay with me all night</button><button type="button" data-nk="dawn">🌅 You'll be going home before sunrise</button></div></div>
     <div class="sect"><label class="switch"><input type="checkbox" id="fLong"><span id="lLong">Long trip (all day / out of town)</span></label>
       <label id="retWrap" hidden style="margin-top:12px"><span id="lRet">Back home around</span><input type="time" id="fRet"></label></div>
     <div class="sect"><label><span id="lNote">Note for my buddy</span><textarea id="fNote"></textarea></label></div>
@@ -326,8 +335,8 @@ main{padding-bottom:200px}
 <script>
 {
 const T={
- en:{q:d=>"Where to "+d+"?",today:"today",tomorrow:"tomorrow",trip:"Your trip",tapHint:"Tap your places in the order you'll visit them: 1, 2, 3…",time:"Pick-up time",other:"Other",lLong:"Long trip (all day / out of town)",ret:"Back home around",lNote:"Note for my buddy",go:"Let's Roll!",update:"Update & roll",cancel:"Cancel",newPl:"Somewhere new",newPh:"Type a place or paste a Maps link",add:"Add",none:"No car booked for this day.",book:"Plan this day",edit:"Edit",del:"Delete",pick:"Pick-up",back:"Back around",long:"Long trip",route:"Route & live traffic",map:"Map",pending:"Waiting for your buddy",accepted:"Buddy's on it!",declined:"Buddy can't make it",note:"Note",drvNote:"Buddy says",copy:"Copy for LINE",up:"Coming up",noUp:"Nothing booked yet. Pick a day and tap your places.",needStop:"Tap at least one place first.",translating:"Translating into Thai…",sent:"Sent! Your buddy will see it in Thai.",copied:"Copied. Paste it into LINE.",noDb:"Sign in to see and save bookings.",ro:"This account can view bookings but not change them.",late:"Can't reach the booking list yet, so it may be out of date.",pl:"Saved places",plName:"Name",plAddr:"Address or Google Maps link",plTel:"Phone (optional)",plPic:"Photo of the entrance (optional)",plSave:"Save place",plNone:"No saved places yet.",saved2:"Place saved",addSum:"+ Save a new place",openMap:"Open in Google Maps",stamp:"Accepted!",bring:"Bring me",bringT:"Bring me…",bringTo:"Bring it to",bringHere:"Where I am now (I'll send my location in LINE)",bringOther:"Anything else? (optional)",bringPic:"Add a photo of it (optional)",bringSend:"Send to my buddy",bringNeed:"Tap at least one thing, type something or add a photo.",bringSent:"Sent! Your buddy has the list.",reqT:"Bring-me request",reqSent:"Waiting for your buddy to see it…",reqComing:"Your buddy is on the way with it!",reqDone:"Delivered",cancel2:"Cancel request",night:"TIME TO RAGE",nightSub:"My buddy stays with me all night",nightOn:"TIME TO RAGE is ON: buddy on standby all night",nightBan:"TIME TO RAGE",NK:{tequila:"Bring me a bottle of tequila to the office.",doink:"Roll me a 4-gram doink.",bender:"You're gonna stay with me all night.",dawn:"You'll be going home before sunrise."},line:"Send via LINE / WhatsApp",sendT:"Send to…",sendHint:"WhatsApp opens a chat straight to that number. LINE opens with the message ready, and you pick the person there.",addPerson:"Add person",pName:"Name",pLang:"Their language",everyone:"Everyone",everyoneSub:"English + Thai",sos:"SOS",sosT:"Emergency",sosTake:"Take me to the hospital",sosTakeSub:"Alerts your buddy now",sosNearSub:"Opens Google Maps near you",sosGo:"Drive there now (Maps)",sosAlert:"Alert my buddy: hospital now",sosNear:"Find the nearest hospital",sosFrom:"Pick up from",sosHere:"Not needed / we'll go ourselves",sosNote:"Quick note (optional)",sosNums:"Emergency numbers",amb:"Ambulance",tpol:"Tourist police",pol:"Police",close:"Close",alertT:"Hospital trip, NOW",alertSent:"Buddy alerted",alertWait:"Waiting for your buddy to see it…",alertOn:"Your buddy is on the way!",clear:"All clear",noHosp:"No hospital saved yet.",stats:(n,a)=>n?`<b>${n}</b> ${n==1?"trip":"trips"} in the next two weeks · <b>${a}</b> accepted`:"No trips planned yet. Let's plan one!",stopsN:n=>n+(n==1?" stop":" stops"),accept:"Accept",decline:"Can't go",reply:"Reply",sendReply:"Send"},
- th:{none:"วันนี้ไม่มีงาน",pick:"เวลารับ",back:"กลับประมาณ",long:"ทริปไกล / ทั้งวัน",route:"เส้นทาง + สภาพจราจร",map:"แผนที่",pending:"รอบัดดี้ยืนยัน",accepted:"รับงานแล้ว",declined:"ไม่สะดวก",note:"หมายเหตุ",drvNote:"บัดดี้แจ้ง",copy:"คัดลอกไป LINE",up:"งานที่จะถึง",noUp:"ยังไม่มีงาน",copied:"คัดลอกแล้ว วางใน LINE ได้เลย",noDb:"กรุณาเข้าสู่ระบบเพื่อดูงาน",ro:"บัญชีนี้ดูได้อย่างเดียว ยังกดรับงานไม่ได้",late:"ยังโหลดข้อมูลไม่ได้ ข้อมูลอาจไม่อัปเดต",pl:"สถานที่ที่บันทึกไว้",plNone:"ยังไม่มี",openMap:"เปิด Google Maps",stamp:"รับงานแล้ว!",reqT:"ช่วยนำของพวกนี้มาให้หน่อย",reqTo:"ส่งที่",reqHere:"ที่ที่ฉันอยู่ตอนนี้ (จะส่งโลเคชันทาง LINE)",reqOnWay:"รับทราบ กำลังไป",reqDelivered:"ส่งของแล้ว",reqComing:"กำลังนำไปส่ง",nightBan:"ได้เวลาปาร์ตี้! (TIME TO RAGE)",NK:{tequila:"ช่วยซื้อเตกีลา 1 ขวด มาส่งที่ออฟฟิศหน่อย",doink:"ช่วยมวนกัญชาให้หนึ่งมวน 4 กรัม",bender:"คืนนี้ต้องอยู่ด้วยกันทั้งคืนนะ บอกที่บ้านไว้ด้วยว่าจะกลับตอนเช้า",dawn:"คืนนี้ดึกหน่อย แต่ได้กลับบ้านก่อนพระอาทิตย์ขึ้นแน่นอน"},sos:"SOS",sosT:"ฉุกเฉิน",sosTake:"พาไปโรงพยาบาล",sosTakeSub:"นำทางไปโรงพยาบาล",sosNearSub:"เปิด Google Maps ใกล้ตัว",sosGo:"นำทางไปโรงพยาบาล",sosNear:"หาโรงพยาบาลที่ใกล้ที่สุด",sosNums:"เบอร์ฉุกเฉิน",amb:"รถพยาบาล",tpol:"ตำรวจท่องเที่ยว",pol:"ตำรวจ",close:"ปิด",alertT:"ด่วน! ไปโรงพยาบาลตอนนี้",onWay:"รับทราบ กำลังไป",alertOn:"กำลังไป",pickFrom:"รับที่",stats:(n,a)=>n?`งาน 2 สัปดาห์นี้ <b>${n}</b> · รับแล้ว <b>${a}</b>`:"ยังไม่มีงาน",stopsN:n=>n+" จุด",accept:"รับงาน",decline:"ไม่สะดวก",reply:"ตอบกลับ",sendReply:"ส่ง",saved:"ส่งแล้ว"}
+ en:{q:d=>"Where to "+d+"?",onDay:d=>"on "+d,dests:"Destinations",rageOff:"Turn off",today:"today",tomorrow:"tomorrow",trip:"Your trip",tapHint:"Tap your places in the order you'll visit them: 1, 2, 3…",time:"Pick-up time",other:"Other",lLong:"Long trip (all day / out of town)",ret:"Back home around",lNote:"Note for my buddy",go:"Let's Roll!",update:"Update & roll",cancel:"Cancel",newPl:"Somewhere new",newPh:"Type a place or paste a Maps link",add:"Add",none:"No car booked for this day.",book:"Plan this day",edit:"Edit",del:"Delete",pick:"Pick-up",back:"Back around",long:"Long trip",route:"Route & live traffic",map:"Map",pending:"Waiting for your buddy",accepted:"Buddy's on it!",declined:"Buddy can't make it",note:"Note",drvNote:"Buddy says",copy:"Copy for LINE",up:"Coming up",noUp:"Nothing booked yet. Pick a day and tap your places.",needStop:"Tap at least one place first.",translating:"Translating into Thai…",sent:"Sent! Your buddy will see it in Thai.",copied:"Copied. Paste it into LINE.",noDb:"Sign in to see and save bookings.",ro:"This account can view bookings but not change them.",late:"Can't reach the booking list yet, so it may be out of date.",pl:"Saved places",plName:"Name",plAddr:"Address or Google Maps link",plTel:"Phone (optional)",plPic:"Photo of the entrance (optional)",plSave:"Save place",plNone:"No saved places yet.",saved2:"Place saved",addSum:"+ Save a new place",openMap:"Open in Google Maps",stamp:"Accepted!",bring:"Bring me",bringT:"Bring me…",bringTo:"Bring it to",bringHere:"Where I am now (I'll send my location in LINE)",bringOther:"Anything else? (optional)",bringPic:"Add a photo of it (optional)",bringSend:"Send to my buddy",bringNeed:"Tap at least one thing, type something or add a photo.",bringSent:"Sent! Your buddy has the list.",reqT:"Bring-me request",reqSent:"Waiting for your buddy to see it…",reqComing:"Your buddy is on the way with it!",reqDone:"Delivered",cancel2:"Cancel request",night:"TIME TO RAGE",nightSub:"My buddy stays with me all night",nightOn:"Rage night: buddy on standby all night",nightBan:"TIME TO RAGE",NK:{tequila:"Bring me a bottle of tequila to the office.",doink:"Roll me a 4-gram doink.",bender:"You're gonna stay with me all night.",dawn:"You'll be going home before sunrise."},line:"Send via LINE / WhatsApp",sendT:"Send to…",sendHint:"WhatsApp opens a chat straight to that number. LINE opens with the message ready, and you pick the person there.",addPerson:"Add person",pName:"Name",pLang:"Their language",everyone:"Everyone",everyoneSub:"English + Thai",sos:"SOS",sosT:"Emergency",sosTake:"Take me to the hospital",sosTakeSub:"Alerts your buddy now",sosNearSub:"Opens Google Maps near you",sosGo:"Drive there now (Maps)",sosAlert:"Alert my buddy: hospital now",sosNear:"Find the nearest hospital",sosFrom:"Pick up from",sosHere:"Not needed / we'll go ourselves",sosNote:"Quick note (optional)",sosNums:"Emergency numbers",amb:"Ambulance",tpol:"Tourist police",pol:"Police",close:"Close",alertT:"Hospital trip, NOW",alertSent:"Buddy alerted",alertWait:"Waiting for your buddy to see it…",alertOn:"Your buddy is on the way!",clear:"All clear",noHosp:"No hospital saved yet.",stats:(n,a)=>n?`<b>${n}</b> ${n==1?"trip":"trips"} in the next two weeks · <b>${a}</b> accepted`:"No trips planned yet. Let's plan one!",stopsN:n=>n+(n==1?" stop":" stops"),accept:"Accept",decline:"Can't go",reply:"Reply",sendReply:"Send"},
+ th:{q:d=>d+" ไปไหนดี?",onDay:d=>d,dests:"จุดหมาย",rageOff:"ปิด",today:"วันนี้",tomorrow:"พรุ่งนี้",trip:"ทริปของเรา",tapHint:"แตะสถานที่ตามลำดับที่จะไป: 1, 2, 3…",time:"เวลาออกเดินทาง",other:"เวลาอื่น",lLong:"ทริปไกล (ทั้งวัน / ต่างจังหวัด)",ret:"กลับบ้านประมาณ",lNote:"ข้อความถึงบัดดี้",go:"Let's Roll! ไปกันเลย",update:"อัปเดตแล้วไปกัน",cancel:"ยกเลิก",newPl:"ที่ใหม่",newPh:"พิมพ์ชื่อสถานที่ หรือวางลิงก์แผนที่",add:"เพิ่ม",book:"วางแผนวันนี้",edit:"แก้ไข",del:"ลบ",needStop:"แตะอย่างน้อยหนึ่งสถานที่ก่อน",translating:"กำลังแปล…",sent:"ส่งแล้ว! บัดดี้เห็นเป็นภาษาไทย",plName:"ชื่อ",plAddr:"ที่อยู่ หรือลิงก์ Google Maps",plTel:"เบอร์โทร (ไม่บังคับ)",plPic:"รูปทางเข้า (ไม่บังคับ)",plSave:"บันทึกสถานที่",saved2:"บันทึกแล้ว",addSum:"+ เพิ่มสถานที่ใหม่",bring:"ฝากหยิบ",bringT:"ฝากหยิบของ…",bringTo:"ส่งที่",bringHere:"ที่ที่ฉันอยู่ตอนนี้ (จะส่งโลเคชันทาง LINE)",bringOther:"อย่างอื่นอีกไหม? (ไม่บังคับ)",bringPic:"เพิ่มรูป (ไม่บังคับ)",bringSend:"ส่งให้บัดดี้",bringNeed:"แตะอย่างน้อยหนึ่งอย่าง พิมพ์ หรือเพิ่มรูป",bringSent:"ส่งแล้ว! บัดดี้ได้รายการแล้ว",reqSent:"รอบัดดี้เห็นข้อความ…",reqDone:"ส่งของแล้ว",cancel2:"ยกเลิกคำขอ",nightOn:"คืนปาร์ตี้: บัดดี้สแตนด์บายทั้งคืน",line:"ส่งทาง LINE / WhatsApp",sendT:"ส่งถึง…",sendHint:"WhatsApp เปิดแชทกับเบอร์นั้นเลย ส่วน LINE เปิดพร้อมข้อความ แล้วเลือกคนใน LINE",addPerson:"เพิ่มคน",pName:"ชื่อ",pLang:"ภาษาของเขา",everyone:"ทุกคน",everyoneSub:"อังกฤษ + ไทย",sosAlert:"แจ้งบัดดี้: ไปโรงพยาบาลตอนนี้",sosFrom:"รับที่",sosHere:"ไม่ต้อง / ไปเอง",sosNote:"ข้อความสั้นๆ (ไม่บังคับ)",alertSent:"แจ้งบัดดี้แล้ว",alertWait:"รอบัดดี้เห็นข้อความ…",clear:"เรียบร้อยแล้ว",noHosp:"ยังไม่ได้บันทึกโรงพยาบาล",none:"วันนี้ไม่มีงาน",pick:"เวลารับ",back:"กลับประมาณ",long:"ทริปไกล / ทั้งวัน",route:"เส้นทาง + สภาพจราจร",map:"แผนที่",pending:"รอบัดดี้ยืนยัน",accepted:"รับงานแล้ว",declined:"ไม่สะดวก",note:"หมายเหตุ",drvNote:"บัดดี้แจ้ง",copy:"คัดลอกไป LINE",up:"งานที่จะถึง",noUp:"ยังไม่มีงาน",copied:"คัดลอกแล้ว วางใน LINE ได้เลย",noDb:"กรุณาเข้าสู่ระบบเพื่อดูงาน",ro:"บัญชีนี้ดูได้อย่างเดียว ยังกดรับงานไม่ได้",late:"ยังโหลดข้อมูลไม่ได้ ข้อมูลอาจไม่อัปเดต",pl:"สถานที่ที่บันทึกไว้",plNone:"ยังไม่มี",openMap:"เปิด Google Maps",stamp:"รับงานแล้ว!",reqT:"ช่วยนำของพวกนี้มาให้หน่อย",reqTo:"ส่งที่",reqHere:"ที่ที่ฉันอยู่ตอนนี้ (จะส่งโลเคชันทาง LINE)",reqOnWay:"รับทราบ กำลังไป",reqDelivered:"ส่งของแล้ว",reqComing:"กำลังนำไปส่ง",nightBan:"ได้เวลาปาร์ตี้! (TIME TO RAGE)",NK:{tequila:"ช่วยซื้อเตกีลา 1 ขวด มาส่งที่ออฟฟิศหน่อย",doink:"ช่วยมวนกัญชาให้หนึ่งมวน 4 กรัม",bender:"คืนนี้ต้องอยู่ด้วยกันทั้งคืนนะ บอกที่บ้านไว้ด้วยว่าจะกลับตอนเช้า",dawn:"คืนนี้ดึกหน่อย แต่ได้กลับบ้านก่อนพระอาทิตย์ขึ้นแน่นอน"},sos:"SOS",sosT:"ฉุกเฉิน",sosTake:"พาไปโรงพยาบาล",sosTakeSub:"นำทางไปโรงพยาบาล",sosNearSub:"เปิด Google Maps ใกล้ตัว",sosGo:"นำทางไปโรงพยาบาล",sosNear:"หาโรงพยาบาลที่ใกล้ที่สุด",sosNums:"เบอร์ฉุกเฉิน",amb:"รถพยาบาล",tpol:"ตำรวจท่องเที่ยว",pol:"ตำรวจ",close:"ปิด",alertT:"ด่วน! ไปโรงพยาบาลตอนนี้",onWay:"รับทราบ กำลังไป",alertOn:"กำลังไป",pickFrom:"รับที่",stats:(n,a)=>n?`งาน 2 สัปดาห์นี้ <b>${n}</b> · รับแล้ว <b>${a}</b>`:"ยังไม่มีงาน",stopsN:n=>n+" จุด",accept:"รับงาน",decline:"ไม่สะดวก",reply:"ตอบกลับ",sendReply:"ส่ง",saved:"ส่งแล้ว"}
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -364,8 +373,8 @@ const okImg=u=>/^data:image\//.test(u||"")||/^[A-Za-z0-9_-]+\.(jpg|png)$/.test(u
 const ICON_LIB=["ic-gym","ic-burger","ic-noodle","ic-coffee","ic-pizza","ic-chicken","ic-snack","ic-water","ic-energy","ic-orange","ic-tequila","ic-bag","ic-papers","ic-lighter","ic-star"];
 const COLORS=["#4a74ff","#ff6fae","#ffb020","#22b8cf","#8c6cff","#ff7a45"];
 const TIMES=["07:00","08:00","09:00","10:00","12:00","15:00","17:00","20:00","22:00"];
-let isAdult=false,places={},trips={},mode=store.get("ds-mode")||"",sel=ymd(new Date()),db=null,sample=null,canWrite=true,editing=false,replyOpen=false,plan=null,stampAnim=false;
-const fam=()=>mode!=="driver",L=()=>fam()?T.en:Object.assign({},T.en,T.th);
+let isAdult=false,places={},trips={},role=store.get("ds-role")||"boss",lang=store.get("ds-lang")||"",buddyPin=null,sel=ymd(new Date()),db=null,sample=null,canWrite=true,editing=false,replyOpen=false,plan=null,stampAnim=false;
+const fam=()=>role!=="buddy",isTh=()=>lang==="th",L=()=>isTh()?Object.assign({},T.en,T.th):T.en;
 const fmtDay=(s,th,o)=>parse(s).toLocaleDateString(th?"th-TH":"en-GB",o);
 const mapLink=s=>isUrl(s)?s.trim():"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s);
 const plList=()=>Object.entries(places).sort((a,b)=>(a[1].order??99)-(b[1].order??99));
@@ -380,13 +389,13 @@ function badge(p,name){
   const n=(p?.name||name||"?").trim();let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;
   return `<span class="bdg" style="--b:${COLORS[h%COLORS.length]}"><b>${esc(isUrl(n)?"•":n.slice(0,2).toUpperCase())}</b></span>`}
 
-function renderHead(){const l=L(),today=ymd(new Date()),th=!fam(),out=[],d=new Date();
+function renderHead(){const l=L(),today=ymd(new Date()),th=isTh(),bud=!fam(),out=[],d=new Date();
   const ks=Object.keys(trips).filter(k=>k>=today&&k<=ymd(new Date(d.getFullYear(),d.getMonth(),d.getDate()+13)));
   $("stats").innerHTML=l.stats(ks.length,ks.filter(k=>trips[k].status==="accepted").length);
   for(let i=0;i<14;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i),k=ymd(x),t=trips[k];
     out.push(`<button class="day" type="button" data-d="${k}" aria-pressed="${k===sel}"><span>${esc(fmtDay(k,th,{weekday:"short"}))}</span><b>${x.getDate()}</b>${t?`<i class="${esc(t.status)}"${t.night?' style="background:linear-gradient(135deg,#c13cff,#ff3fa4,#ffb020)"':""}></i>`:""}</button>`)}
   $("week").innerHTML=out.join("");
-  $("mFam").setAttribute("aria-pressed",!th);$("mDrv").setAttribute("aria-pressed",th);document.documentElement.lang=th?"th":"en"}
+  $("mEn").setAttribute("aria-pressed",!th);$("mTh").setAttribute("aria-pressed",th);$("budBtn").setAttribute("aria-pressed",!fam());$("budLbl").textContent=fam()?(th?"บัดดี้":"My Buddy"):(th?"ออกจากโหมดบัดดี้":"Exit buddy");document.documentElement.lang=th?"th":"en"}
 
 /* ---------- planner (family) ---------- */
 function startPlan(){const t=trips[sel];
@@ -400,13 +409,12 @@ function renderPlanBits(){if(!plan)return;const l=L();
   $("road").innerHTML=plan.stops.length?`<ol class="road">${plan.stops.map((s,i)=>{const p=s.pid&&places[s.pid];return `<li><span class="n">${i+1}</span><span>${esc(p?p.name:(isUrl(s.en)?"Map link":s.en))}</span><button class="x" type="button" data-rm="${i}" aria-label="Remove">×</button></li>`}).join("")}</ol>`:`<p class="empty-road">${l.tapHint}</p>`;
   const other=!TIMES.includes(plan.time);
   $("times").innerHTML=TIMES.map(t=>`<button type="button" class="tchip" data-t="${t}" aria-pressed="${plan.time===t}">${t}</button>`).join("")+`<input type="time" id="tOther" aria-label="${l.other}" value="${other?esc(plan.time):""}" style="width:130px${other?";border-color:var(--sky)":""}">`;
-  $("nightBtn").setAttribute("aria-pressed",!!plan.night);$("nightTick").textContent=plan.night?"✓":"🪩";$("nightLbl").textContent=l.night;$("nightSub").textContent=plan.night?l.nightOn:l.nightSub;
-  $("nightKinds").hidden=!plan.night;[...$("nightKinds").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.nk===plan.nightKind||plan.extras.includes(b.dataset.nk)));
-  $("nightBtn").parentElement.hidden=!isAdult}
+  $("rageBox").hidden=!(plan.night&&isAdult);$("nightLbl").textContent=l.nightOn;$("rageOff").textContent=l.rageOff;[...$("nightKinds").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.nk===plan.nightKind||plan.extras.includes(b.dataset.nk)));
+}
 function renderPlanner(){const l=L(),show=fam()&&!!db&&canWrite&&(editing||!trips[sel]);$("planner").hidden=!show;if(!show)return;
   if(!plan)startPlan();
-  const d=sel===ymd(new Date())?l.today:sel===ymd(new Date(Date.now()+864e5))?l.tomorrow:"on "+fmtDay(sel,false,{weekday:"long",day:"numeric",month:"short"});
-  $("pTitle").textContent=l.q(d);$("tripH").textContent=l.trip;$("timeH").textContent=l.time;$("lLong").textContent=l.lLong;$("lRet").textContent=l.ret;$("lNote").textContent=l.lNote;
+  const d=sel===ymd(new Date())?l.today:sel===ymd(new Date(Date.now()+864e5))?l.tomorrow:l.onDay(fmtDay(sel,isTh(),{weekday:"long",day:"numeric",month:"short"}));
+  $("pTitle").textContent=l.q(d);$("tripH").textContent=l.trip;$("timeH").textContent=l.time;$("placesH").textContent=l.dests;$("lLong").textContent=l.lLong;$("lRet").textContent=l.ret;$("lNote").textContent=l.lNote;
   $("send").textContent=trips[sel]?l.update:l.go;$("cancel").textContent=l.cancel;$("cancelRow").hidden=!trips[sel];$("newIn").placeholder=l.newPh;$("newAdd").textContent=l.add;
   renderPlanBits()}
 
@@ -416,15 +424,15 @@ function stopHtml(s,i,th){const p=s.pid&&places[s.pid];
   if(isUrl(main))main=th?"ลิงก์แผนที่":"Map link";
   const tel=p&&p.phone?`<div><a class="tel" href="tel:${esc(p.phone.replace(/[^0-9+]/g,""))}">☎ ${esc(p.phone)}</a></div>`:"";
   return `<li>${badge(p,s.label||(i+1)+"")}<div><div class="nm">${i+1}. ${esc(main)}</div>${sub&&!isUrl(sub)?`<div class="sub">${esc(sub)}</div>`:""}${p&&p.tip?`<div><b>★ ${esc(th?(p.tipTh||p.tip):p.tip)}</b></div>`:""}${tel}</div><a class="btn" href="${esc(mapLink(s.link||s.en))}" target="_blank" rel="noopener">${L().map}</a>${p&&okImg(p.photo)?`<img class="pimg" src="${esc(p.photo)}" alt="">`:""}</li>`}
-function renderTicket(){const t=trips[sel],l=L(),th=!fam(),el=$("ticket");
+function renderTicket(){const t=trips[sel],l=L(),th=isTh(),bud=!fam(),el=$("ticket");
   if(fam()&&!$("planner").hidden){el.hidden=true;return}el.hidden=false;
   const head=`<div class="thead"><h2>${esc(fmtDay(sel,th,{weekday:"long",day:"numeric",month:"long"}))}</h2>${t?(t.status==="accepted"?`<span class="stamp${stampAnim?" anim":""}">${l.stamp}</span>`:`<span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span>`):""}</div>`;
   if(!t){el.innerHTML=head+`<p class="empty">${l.none}</p>`;return}
   const r=routeLink(t),note=th?(t.noteTh||t.note):t.note,dn=th?t.driverNote:(t.driverNoteEn||t.driverNote);
   let acts="";
-  if(th&&canWrite&&db){acts=`<div class="row">${t.status!=="accepted"?`<button class="btn yes" type="button" data-a="accept">✓ ${l.accept}</button>`:""}${t.status!=="declined"?`<button class="btn warn" type="button" data-a="decline">${l.decline}</button>`:""}<button class="btn ghost" type="button" data-a="reply">${l.reply}</button></div>`+
+  if(bud&&canWrite&&db){acts=`<div class="row">${t.status!=="accepted"?`<button class="btn yes" type="button" data-a="accept">✓ ${l.accept}</button>`:""}${t.status!=="declined"?`<button class="btn warn" type="button" data-a="decline">${l.decline}</button>`:""}<button class="btn ghost" type="button" data-a="reply">${l.reply}</button></div>`+
     (replyOpen?`<form id="replyF" style="display:grid;gap:10px"><textarea id="rText" aria-label="${l.reply}">${esc(t.driverNote||"")}</textarea><div class="row"><button class="btn main" type="submit">${l.sendReply}</button></div><p class="status" id="rStatus"></p></form>`:"")}
-  else if(!th&&canWrite&&db)acts=`<div class="row"><button class="btn main" type="button" data-a="edit">${l.edit}</button><button class="btn ghost" type="button" data-send="trip">${l.line}</button><button class="btn ghost" type="button" data-a="copy">${l.copy}</button><button class="btn warn" type="button" data-a="del">${l.del}</button></div>`;
+  else if(!bud&&canWrite&&db)acts=`<div class="row"><button class="btn main" type="button" data-a="edit">${l.edit}</button><button class="btn ghost" type="button" data-send="trip">${l.line}</button><button class="btn ghost" type="button" data-a="copy">${l.copy}</button><button class="btn warn" type="button" data-a="del">${l.del}</button></div>`;
   else acts=`<div class="row"><button class="btn ghost" type="button" data-a="copy">${l.copy}</button></div>`;
   el.innerHTML=head+`<div class="tk">
    <div class="when"><strong>${esc(t.time)}</strong><span>${l.pick}</span>${t.longTrip?`<span class="long">${l.long}</span>`:""}${t.ret?`<span>${l.back} <b>${esc(t.ret)}</b></span>`:""}</div>
@@ -434,24 +442,24 @@ function renderTicket(){const t=trips[sel],l=L(),th=!fam(),el=$("ticket");
    ${note?`<div class="note"><small>${l.note}</small>${esc(note)}${th&&t.noteTh&&t.note?`<small>${esc(t.note)}</small>`:""}</div>`:""}
    ${dn?`<div class="note"><small>${l.drvNote}</small>${esc(dn)}${!th&&t.driverNoteEn&&t.driverNote?`<small>${esc(t.driverNote)}</small>`:""}</div>`:""}
    ${acts}</div>`;stampAnim=false}
-function renderUpcoming(){const l=L(),th=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
+function renderUpcoming(){const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
   const ks=Object.keys(trips).filter(k=>k>=today).sort();
   $("upcoming").innerHTML=ks.length?ks.map(k=>{const t=trips[k],names=(t.stops||[]).map(s=>th?(s.labelTh||s.label||s.th||s.en):(s.label||s.en)).filter(x=>!isUrl(x));
     return `<button class="item" type="button" data-d="${k}"><div><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><div class="sub">${t.night?"✨ ":""}${esc(t.time)}</div></div><div class="sub">${esc(names.join(" → ")||l.stopsN((t.stops||[]).length))}</div><span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span></button>`}).join(""):`<p class="hint">${l.noUp}</p>`}
 function renderPlaces(){const l=L(),f=fam();$("placesWrap").hidden=!db;$("addWrap").hidden=!f||!canWrite;
   $("plTitle").textContent=l.pl;$("addSum").textContent=editPid?$("addSum").textContent:l.addSum;$("lPlName").textContent=l.plName;$("lPlAddr").textContent=l.plAddr;$("lPlTel").textContent=l.plTel;$("lPlPic").textContent=l.plPic;if(!editPid)$("pSave").textContent=l.plSave;
   const ps=plList().filter(([,p])=>p.kind!=="hospital").sort((a,b)=>a[1].name.localeCompare(b[1].name));
-  $("places").innerHTML=ps.map(([id,p])=>`<button type="button" class="ptile" data-pview="${esc(id)}">${badge(p)}<b>${esc(f?p.name:(p.nameTh||p.name))}</b><span class="ar">${esc(area(p))}</span></button>`).join("")
+  $("places").innerHTML=ps.map(([id,p])=>`<button type="button" class="ptile" data-pview="${esc(id)}">${badge(p)}<b>${esc(!isTh()?p.name:(p.nameTh||p.name))}</b><span class="ar">${esc(area(p))}</span></button>`).join("")
    +(f&&canWrite?`<button type="button" class="ptile" id="blankCard"><span class="bdg plus">+</span><b>${l.addSum.replace("+ ","")}</b></button>`:"")
    +(!ps.length&&!(f&&canWrite)?`<p class="hint">${l.plNone}</p>`:"")}
-function area(p){if(isUrl(p.address||""))return p.tip?(fam()?p.tip:(p.tipTh||p.tip)).split(/[,(]/)[0].slice(0,28):"";const a=String(p.address||"").replace(/\b\d{5}\b/g,"").split(",").map(x=>x.trim()).filter(Boolean);return (a[a.length-1]||"").replace(/^Chang Wat /,"")}
+function area(p){if(isUrl(p.address||""))return p.tip?(!isTh()?p.tip:(p.tipTh||p.tip)).split(/[,(]/)[0].slice(0,28):"";const a=String(p.address||"").replace(/\b\d{5}\b/g,"").split(",").map(x=>x.trim()).filter(Boolean);return (a[a.length-1]||"").replace(/^Chang Wat /,"")}
 function badgeColor(p){if(p.badge&&/^#[0-9a-f]{3,8}$/i.test(p.badge.bg||""))return p.badge.bg;const n=(p.name||"?").trim();let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return COLORS[h%COLORS.length]}
 let viewPid="";
-function placeSheet(){const l=L(),f=fam(),p=places[viewPid];if(!p)return `<button class="btn ghost close" type="button" data-sheet="close">${l.close}</button>`;
+function placeSheet(){const l=L(),f=fam(),E=!isTh(),p=places[viewPid];if(!p)return `<button class="btn ghost close" type="button" data-sheet="close">${l.close}</button>`;
   return `<button class="btn ghost close" type="button" data-sheet="close">${l.close}</button>
-   <div class="pdet">${badge(p)}<div><h2 id="sosTitle" style="margin:0;font-size:24px">${esc(f?p.name:(p.nameTh||p.name))}</h2><div class="sub" style="color:var(--mute)">${esc(f?(p.nameTh||""):p.name)}</div></div></div>
-   ${p.tip?`<div class="note">★ ${esc(f?p.tip:(p.tipTh||p.tip))}</div>`:""}
-   <div style="color:var(--mute);font-size:15px">${esc(f?p.address:(p.addressTh||p.address))}${p.addressTh?`<br>${esc(f?p.addressTh:p.address)}`:""}</div>
+   <div class="pdet">${badge(p)}<div><h2 id="sosTitle" style="margin:0;font-size:24px">${esc(E?p.name:(p.nameTh||p.name))}</h2><div class="sub" style="color:var(--mute)">${esc(E?(p.nameTh||""):p.name)}</div></div></div>
+   ${p.tip?`<div class="note">★ ${esc(E?p.tip:(p.tipTh||p.tip))}</div>`:""}
+   <div style="color:var(--mute);font-size:15px">${esc(E?p.address:(p.addressTh||p.address))}${p.addressTh?`<br>${esc(E?p.addressTh:p.address)}`:""}</div>
    ${okImg(p.photo)?`<img class="pimg" src="${esc(p.photo)}" alt="" style="max-height:240px">`:""}
    <div class="row"><a class="btn main" href="${esc(mapLink(p.link||p.address))}" target="_blank" rel="noopener">${l.openMap} ↗</a>${p.phone?`<a class="btn ghost" href="tel:${esc(p.phone.replace(/[^0-9+]/g,""))}">☎ ${esc(p.phone)}</a>`:""}
    ${f&&canWrite?`<button class="btn ghost" type="button" data-pedit="${esc(viewPid)}">✎ Edit</button><button class="btn warn" type="button" data-pdel="${esc(viewPid)}">Delete</button>`:""}</div>`}
@@ -462,21 +470,22 @@ const hospital=()=>plList().find(([,p])=>p.kind==="hospital");
 const dirLink=a=>"https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+encodeURIComponent(a);
 const telA=(n,label)=>`<a href="tel:${esc(String(n).replace(/[^0-9+]/g,""))}"><b>${esc(n)}</b>${esc(label)}</a>`;
 function alertLive(){return alertDoc&&alertDoc.active&&(Date.now()-Date.parse(alertDoc.at||0))<12*3600e3}
-function renderAlert(){const el=$("alertBox"),l=L(),th=!fam();if(!alertLive()){el.hidden=true;el.innerHTML="";return}
+function renderAlert(){const el=$("alertBox"),l=L(),th=isTh(),bud=!fam();if(!alertLive()){el.hidden=true;el.innerHTML="";return}
   const h=places[alertDoc.hid]||{},from=alertDoc.from&&places[alertDoc.from],hn=th?(h.nameTh||h.name):h.name;
   el.hidden=false;el.className="alert";
   el.innerHTML=`<h2>${l.alertT}</h2><div class="sub"><b>${esc(hn||"")}</b>${from?`<br>${esc(th?T.th.pickFrom:l.sosFrom)}: ${esc(th?(from.nameTh||from.name):from.name)}`:""}${alertDoc.note?`<br>“${esc(th?(alertDoc.noteTh||alertDoc.note):alertDoc.note)}”`:""}</div>
    <div class="sub"><b>${alertDoc.status==="coming"?(th?T.th.alertOn:l.alertOn):(th?"":l.alertWait)}</b></div>
    <div class="row">${from?`<a class="btn" href="${esc(mapLink(from.link||from.address))}" target="_blank" rel="noopener">${esc(th?T.th.pickFrom:l.sosFrom)} ↗</a>`:""}${h.address?`<a class="btn" href="${esc(dirLink(h.address))}" target="_blank" rel="noopener">${esc(hn)} ↗</a>`:""}
-   ${th&&canWrite&&alertDoc.status!=="coming"?`<button class="btn" type="button" data-al="coming">✓ ${T.th.onWay}</button>`:""}${!th&&canWrite?`<button class="btn ghost" type="button" data-al="clear">${l.clear}</button>`:""}</div>`}
+   ${bud&&canWrite&&alertDoc.status!=="coming"?`<button class="btn" type="button" data-al="coming">✓ ${T.th.onWay}</button>`:""}${!bud&&canWrite?`<button class="btn ghost" type="button" data-al="clear">${l.clear}</button>`:""}</div>`}
 function openSheet(k){sheetKind=k||"hosp";sheetOpen=true;if(sheetKind==="bring")$("sheet").innerHTML="";renderSheet();$("veil").hidden=false;$("sheet").querySelector(".close")?.focus()}
 function closeSheet(){sheetOpen=false;$("veil").hidden=true}
 function renderSheet(){if(!sheetOpen)return;if(sheetKind==="bring"){if(!$("itemGrid"))$("sheet").innerHTML=bringSheet();return}
   if(sheetKind==="place"){$("sheet").innerHTML=placeSheet();return}
-  if(sheetKind==="send"){$("sheet").innerHTML=sendSheet();return}const l=L(),th=!fam(),H=hospital(),h=H&&H[1];
+  if(sheetKind==="send"){$("sheet").innerHTML=sendSheet();return}
+  if(sheetKind==="pin"){$("sheet").innerHTML=pinSheet();return}const l=L(),th=isTh(),bud=!fam(),H=hospital(),h=H&&H[1];
   const others=plList().filter(([,p])=>p.kind!=="hospital");
-  const take=!th&&canWrite&&db&&h?`<button class="big red" type="button" data-sheet="alert">🚑 ${l.sosTake}<small>${esc(h.name)} · ${l.sosTakeSub}</small></button>`
-    :h?`<a class="big red" href="${esc(dirLink(h.address))}" target="_blank" rel="noopener">🚑 ${l.sosTake}<small>${esc(th?(h.nameTh||h.name):h.name)} · ${l.sosTakeSub}</small></a>`:"";
+  const take=!bud&&canWrite&&db&&h?`<button class="big red" type="button" data-sheet="alert">🚑 ${l.sosTake}<small>${esc(th?(h.nameTh||h.name):h.name)} · ${th?"แจ้งบัดดี้ทันที":"Alerts your buddy now"}</small></button>`
+    :h?`<a class="big red" href="${esc(dirLink(h.address))}" target="_blank" rel="noopener">🚑 ${l.sosTake}<small>${esc(th?(h.nameTh||h.name):h.name)} · ${th?"นำทางไปโรงพยาบาล":"Directions to the hospital"}</small></a>`:"";
   $("sheet").innerHTML=`<button class="btn ghost close" type="button" data-sheet="close">${l.close}</button><h2 id="sosTitle">${l.sosT}</h2>
    <div class="sosopt">${take}<a class="big soft" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(th?"โรงพยาบาล ใกล้ฉัน":"hospital near me")}" target="_blank" rel="noopener">📍 ${l.sosNear}<small>${l.sosNearSub}</small></a></div>
    <p class="hint" style="text-align:center">${l.amb}: <a href="tel:1669" style="color:var(--red);font-weight:700">1669</a></p>`}
@@ -502,7 +511,7 @@ function bringSheet(){const l=L(),others=plList().filter(([,p])=>p.kind!=="hospi
    <button class="big" type="button" data-sheet="bring" style="background:#16a36a;color:#fff">${l.bringSend}</button><p class="status" id="bStatus"></p>`}
 const reqList=q=>q.list||(q.items||[]).map(k=>{const it=ITEMS.find(x=>x[0]===k);return it&&{k,ic:it[1],en:it[2],th:it[3]}}).filter(Boolean);
 function reqText(q){return cuteReq(q,"th")}
-function renderReqs(){const el=$("reqBox"),l=L(),th=!fam();
+function renderReqs(){const el=$("reqBox"),l=L(),th=isTh(),bud=!fam();
   const list=Object.entries(reqs).filter(([,q])=>q.status!=="done"&&q.status!=="cancelled"&&Date.now()-Date.parse(q.at||0)<24*3600e3).sort((a,b)=>(b[1].at||"").localeCompare(a[1].at||""));
   el.hidden=!list.length;
   el.innerHTML=list.map(([id,q])=>{const to=q.to&&places[q.to];
@@ -514,8 +523,8 @@ function renderReqs(){const el=$("reqBox"),l=L(),th=!fam();
      <div><b>${th?T.th.reqTo:l.bringTo}:</b> ${to?esc(th?(to.nameTh||to.name):to.name):esc(th?T.th.reqHere:l.bringHere)}</div>
      ${st?`<div class="pill ${q.status==="coming"?"accepted":""}" style="justify-self:start">${st}</div>`:""}
      <div class="row">${to?`<a class="btn" href="${esc(mapLink(to.link||to.address))}" target="_blank" rel="noopener">${l.map} ↗</a>`:""}
-      ${th&&canWrite?(q.status!=="coming"?`<button class="btn yes" type="button" data-rq="coming" data-id="${esc(id)}">✓ ${T.th.reqOnWay}</button>`:"")+`<button class="btn main" type="button" data-rq="done" data-id="${esc(id)}">${T.th.reqDelivered} ✓</button>`:""}
-      ${!th&&canWrite?`<button class="btn ghost" type="button" data-send="req:${esc(id)}">${l.line}</button><button class="btn warn" type="button" data-rq="cancelled" data-id="${esc(id)}">${l.cancel2}</button>`:""}</div></div>`}).join("")}
+      ${bud&&canWrite?(q.status!=="coming"?`<button class="btn yes" type="button" data-rq="coming" data-id="${esc(id)}">✓ ${T.th.reqOnWay}</button>`:"")+`<button class="btn main" type="button" data-rq="done" data-id="${esc(id)}">${T.th.reqDelivered} ✓</button>`:""}
+      ${!bud&&canWrite?`<button class="btn ghost" type="button" data-send="req:${esc(id)}">${l.line}</button><button class="btn warn" type="button" data-rq="cancelled" data-id="${esc(id)}">${l.cancel2}</button>`:""}</div></div>`}).join("")}
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-rq]");if(!b||!db)return;b.disabled=true;try{await db.doc("requests/"+b.dataset.id).update({status:b.dataset.rq})}catch(err){b.disabled=false}});
 (function(){const P=["#ffffff","#e8edf8","#c7d0e6","#9aa6c4","#6f7a99","#ffd1f0","#c9f2ff","#fff3b0","#d8c8ff"];let t="",k=0;
   for(let y=24;y<90;y+=7)for(let x=4;x<76;x+=7){const c=P[(x*7+y*13+k++)%P.length];t+=`<rect class="t" x="${x}" y="${y}" width="6.4" height="6.4" fill="${c}" style="animation-delay:${((x*3+y*5)%18)/10}s"/>`}
@@ -523,9 +532,10 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-rq]"
   $("discoSvg").innerHTML=`<defs><clipPath id="dc"><circle cx="39" cy="56" r="32"/></clipPath><radialGradient id="dg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#1b1440" stop-opacity=".55"/></radialGradient></defs>
    <line x1="39" y1="0" x2="39" y2="24" stroke="#9aa6c4" stroke-width="2"/><rect x="34" y="20" width="10" height="6" rx="2" fill="#6f7a99"/>
    <circle cx="39" cy="56" r="32" fill="#3a3560"/><g clip-path="url(#dc)"><g class="ball">${t}</g></g><circle cx="39" cy="56" r="32" fill="url(#dg)"/>${sp}`})();
-$("discoBtn").addEventListener("click",()=>{if(!isAdult)return;if(!fam()){mode="family";store.set("ds-mode",mode)}editing=true;replyOpen=false;plan=null;render();
-  if(!plan)return;plan.night=true;if(plan.time<"17:00")plan.time="20:00";renderPlanBits();$("nightBtn").scrollIntoView({behavior:"smooth",block:"center"})});
+$("discoBtn").addEventListener("click",()=>{if(!isAdult)return;if(!fam()){role="boss";store.set("ds-role",role)}editing=true;replyOpen=false;plan=null;render();
+  if(!plan)return;plan.night=true;if(plan.time<"17:00")plan.time="20:00";renderPlanBits();$("rageBox").scrollIntoView({behavior:"smooth",block:"center"})});
 $("veil").addEventListener("click",async e=>{if(e.target===$("veil"))return closeSheet();
+  const kk=e.target.closest("[data-pk]");if(kk){pinPress(kk.dataset.pk);return}
   const pk=e.target.closest("[data-pick]");if(pk){sendTo=pk.dataset.pick;editContact="";renderSheet();return}
   const ecb=e.target.closest("[data-editc]");if(ecb){editContact=ecb.dataset.editc;renderSheet();($("cPhone")||{}).focus?.();return}
   const rc=e.target.closest("[data-rmc]");if(rc&&db){e.preventDefault();try{await db.doc("contacts/"+rc.dataset.rmc).delete();sendTo="buddy";draft="";renderSheet()}catch(err){}return}
@@ -533,6 +543,7 @@ $("veil").addEventListener("click",async e=>{if(e.target===$("veil"))return clos
   const ip=e.target.closest("[data-ipick]");if(ip){newIcon=ip.dataset.ipick;[...ip.parentElement.children].forEach(x=>x.setAttribute("aria-pressed",x===ip));return}
   const it=e.target.closest("[data-item]");if(it){const k=it.dataset.item,i=bringSel.indexOf(k);i>=0?bringSel.splice(i,1):bringSel.push(k);it.setAttribute("aria-pressed",i<0);return}const b=e.target.closest("[data-sheet]");if(!b)return;
   if(b.dataset.sheet==="close")return closeSheet();
+  if(b.dataset.sheet==="pinchange"){pinNew=true;pinEntry="";renderSheet();return}
   if(b.dataset.sheet==="addperson"){editContact="new";renderSheet();$("cName").focus();return}
   if(b.dataset.sheet==="cancelperson"){editContact="";renderSheet();return}
   if(b.dataset.sheet==="saveperson"&&db){const isB=editContact==="buddy",name=isB?"Buddy":($("cName")?.value||"").trim(),phone=($("cPhone")?.value||"").trim();if(!name)return;
@@ -561,7 +572,7 @@ $("veil").addEventListener("click",async e=>{if(e.target===$("veil"))return clos
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sheetOpen)closeSheet()});
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-al]");if(!b||!db)return;
   try{if(b.dataset.al==="coming")await db.doc("alerts/current").update({status:"coming"});else await db.doc("alerts/current").update({active:false})}catch(err){}});
-function render(){$("sosLbl").textContent=L().sos;$("discoBtn").hidden=!(isAdult&&db&&canWrite);$("bringBtn").hidden=!(isAdult&&db&&canWrite);$("bringLbl").textContent=L().bring||"Bring me";renderReqs();renderAlert();renderSheet();renderHead();renderPlanner();renderTicket();renderUpcoming();renderPlaces()}
+function render(){$("sosLbl").textContent=L().sos;$("discoBtn").hidden=!(isAdult&&db&&canWrite&&fam());$("bringBtn").hidden=!(isAdult&&db&&canWrite&&fam());$("bringLbl").textContent=L().bring||"Bring me";renderReqs();renderAlert();renderSheet();renderHead();renderPlanner();renderTicket();renderUpcoming();renderPlaces()}
 
 /* ---------- translation ---------- */
 async function translate(names,note){const fb={stops:names.map(()=>""),note:""};if(!sample||(!names.some(Boolean)&&!note))return fb;
@@ -586,7 +597,7 @@ $("road").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(
 $("times").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(b){plan.time=b.dataset.t;renderPlanBits()}});
 $("times").addEventListener("change",e=>{if(e.target.id==="tOther"&&e.target.value){plan.time=e.target.value;renderPlanBits()}});
 $("nightKinds").addEventListener("click",e=>{const b=e.target.closest("[data-nk]");if(b&&plan){const k=b.dataset.nk;if(k==="tequila"||k==="doink"){const i=plan.extras.indexOf(k);i>=0?plan.extras.splice(i,1):plan.extras.push(k)}else plan.nightKind=k;renderPlanBits()}});
-$("nightBtn").addEventListener("click",()=>{if(!plan)return;plan.night=!plan.night;if(plan.night&&plan.time<"17:00")plan.time="20:00";renderPlanBits()});
+$("rageOff").addEventListener("click",()=>{if(plan){plan.night=false;renderPlanBits()}});
 $("fLong").addEventListener("change",()=>{$("retWrap").hidden=!$("fLong").checked});
 $("cancel").addEventListener("click",()=>{editing=false;plan=null;render()});
 $("send").addEventListener("click",async()=>{if(!db||!plan)return;const l=L();
@@ -622,8 +633,26 @@ Address: ${JSON.stringify(addr)}`,{modelTier:"quick"});th={nameTh:String(r?.name
     resetPlaceForm();$("addWrap").open=false;$("pStatus").textContent="";toast(L().saved2)}catch(err){$("pStatus").textContent=L().ro}
   $("pSave").disabled=false});
 async function shrink(f,max=720){const b=await createImageBitmap(f),k=Math.min(1,max/Math.max(b.width,b.height)),c=document.createElement("canvas");c.width=Math.round(b.width*k);c.height=Math.round(b.height*k);c.getContext("2d").drawImage(b,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.72)}
-function setMode(m){mode=m;store.set("ds-mode",m);editing=false;replyOpen=false;plan=null;render()}
-$("mFam").addEventListener("click",()=>setMode("family"));$("mDrv").addEventListener("click",()=>setMode("driver"));
+function setLang(v){lang=v;store.set("ds-lang",v);if(plan)plan=null;render()}
+$("mEn").addEventListener("click",()=>setLang("en"));$("mTh").addEventListener("click",()=>setLang("th"));
+function setRole(v){role=v;store.set("ds-role",v);editing=false;replyOpen=false;plan=null;render()}
+$("budBtn").addEventListener("click",()=>{if(!fam()){setRole("boss");return}pinEntry="";openSheet("pin")});
+let pinEntry="",pinNew=false;
+function pinSheet(){const th=isTh(),setMode=!buddyPin||pinNew;
+  if(setMode&&!isAdult)return `<button class="btn ghost close" type="button" data-sheet="close">${th?"ปิด":"Close"}</button><h2 id="sosTitle">🛞 ${th?"โหมดบัดดี้":"My Buddy"}</h2><p class="hint">${th?"ให้เจ้าของแอปตั้ง PIN ก่อน":"Ask the owner to set a buddy PIN first."}</p>`;
+  const dots=[0,1,2,3].map(i=>`<span class="pdot${i<pinEntry.length?" on":""}"></span>`).join("");
+  const keys=["1","2","3","4","5","6","7","8","9","","0","⌫"].map(k=>k?`<button type="button" class="pkey" data-pk="${k}">${k}</button>`:"<span></span>").join("");
+  return `<button class="btn ghost close" type="button" data-sheet="close">${th?"ปิด":"Close"}</button>
+   <h2 id="sosTitle">🛞 ${setMode?(th?"ตั้ง PIN บัดดี้":"Set your buddy's PIN"):(th?"ใส่ PIN บัดดี้":"Buddy PIN")}</h2>
+   <p class="hint" style="margin:0">${setMode?(th?"เลือกรหัส 4 หลัก แล้วบอกบัดดี้":"Pick 4 digits and tell your buddy."):(th?"ใส่รหัส 4 หลักเพื่อเข้าโหมดบัดดี้":"Enter the 4-digit PIN to open the buddy screen.")}</p>
+   <div class="pdots">${dots}</div><p class="status" id="pinMsg" style="text-align:center"></p><div class="pkeys">${keys}</div>
+   ${!setMode&&isAdult?`<button type="button" class="lnk" data-sheet="pinchange" style="justify-self:center">${th?"เปลี่ยน PIN":"Change PIN"}</button>`:""}`}
+async function pinPress(k){if(k==="⌫"){pinEntry=pinEntry.slice(0,-1);renderSheet();return}if(pinEntry.length>=4)return;pinEntry+=k;renderSheet();if(pinEntry.length<4)return;
+  const setMode=!buddyPin||pinNew;
+  if(setMode){try{await db.doc("settings/buddy").set({pin:pinEntry});buddyPin=pinEntry;pinNew=false;toast(isTh()?"ตั้ง PIN แล้ว":"Buddy PIN saved");closeSheet()}catch(e){toast(L().ro)}pinEntry="";return}
+  if(pinEntry===buddyPin){pinEntry="";closeSheet();lang="th";store.set("ds-lang","th");setRole("buddy");toast("สวัสดีครับ บัดดี้ 🛞")}
+  else{pinEntry="";renderSheet();$("pinMsg").textContent=isTh()?"PIN ไม่ถูกต้อง":"Wrong PIN"}}
+
 let contacts={},sendCtx=null,addingPerson=false;
 function enText(t){return cuteTrip(t,"en")}
 function reqTextEn(q){return cuteReq(q,"en")}
@@ -632,7 +661,7 @@ function msgFor(lang,name){if(!sendCtx)return"";let th,en;
   const link="";if(lang==="th")return(name?"สวัสดี "+name+" 👋\n":"สวัสดีครับน้องชาย 😊\n")+th+link;if(lang==="both")return en+"\n\n— 🇹🇭 —\n"+th+link;return(name?"Hi "+name+"! 👋\n":"")+en+link}
 const normPhone=v=>{let d=String(v||"").replace(/[^0-9+]/g,"");if(d.startsWith("+"))d=d.slice(1);else if(d.startsWith("00"))d=d.slice(2);else if(d.startsWith("0"))return "66"+d.slice(1);if(d.startsWith("660"))d="66"+d.slice(3);return d;if(d.startsWith("0"))return "66"+d.slice(1);return d};
 const waHref=(ph,t)=>"https://wa.me/"+normPhone(ph)+"?text="+encodeURIComponent(t);
-const contactList=()=>{const b=contacts.buddy||{};return[["buddy",{name:fam()?"My buddy":"บัดดี้",lang:"th",color:"#ffcc00",fixed:true,phone:b.phone||""}],...Object.entries(contacts).filter(([id])=>id!=="buddy").sort((a,b)=>(a[1].at||"").localeCompare(b[1].at||""))]};
+const contactList=()=>{const b=contacts.buddy||{};return[["buddy",{name:!isTh()?"My buddy":"บัดดี้",lang:"th",color:"#ffcc00",fixed:true,phone:b.phone||""}],...Object.entries(contacts).filter(([id])=>id!=="buddy").sort((a,b)=>(a[1].at||"").localeCompare(b[1].at||""))]};
 let editContact="",sendTo="buddy",draft="",draftFor="";
 function curC(){if(sendTo==="everyone")return{name:L().everyone,lang:"both",phone:""};const c=contactList().find(([id])=>id===sendTo);return c?c[1]:contactList()[0][1]}
 function freshDraft(){const c=curC();draft=msgFor(c.lang,c.fixed||sendTo==="everyone"?"":c.name);draftFor=sendTo}
@@ -675,7 +704,7 @@ render();
 (async()=>{
   const user=await claude.use("user");
   isAdult=!!(await user?.isOwner());
-  if(!mode){mode=isAdult?"family":"driver"}
+  if(!lang){lang=isAdult?"en":"th";store.set("ds-lang",lang)}
   const w=await user?.can?.("data.write");if(w===false)canWrite=false;
   sample=await claude.use("sample");
   db=await claude.use("db");if(!db){$("conn").textContent=L().noDb;render();return}
@@ -686,6 +715,7 @@ render();
     if(!snap.metadata.fromCache){clearTimeout(timer);if($("conn").textContent===L().late)$("conn").textContent=""}
     if(plan&&!$("planner").hidden){renderHead();renderUpcoming()}else render()},
     ()=>{clearTimeout(timer);$("conn").textContent=L().late});
+  db.doc("settings/buddy").onSnapshot(d=>{buddyPin=d.exists&&d.data().pin?String(d.data().pin):null},()=>{});
   db.collection("contacts").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});contacts=o;if(sheetOpen&&sheetKind==="send")renderSheet()},()=>{});
   db.collection("items").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});customItems=o;if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});
   db.doc("settings/items").onSnapshot(d=>{hiddenItems=d.exists&&Array.isArray(d.data().hidden)?d.data().hidden:[];if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});
