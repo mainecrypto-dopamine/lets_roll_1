@@ -167,6 +167,7 @@
       return;
     }
     member = data;
+    window.lrMember = data;
     document.getElementById("lrGate")?.remove();
     if (!loaded) { goLive(); await loadAll().catch(console.error); }
     resolveReady();
@@ -192,6 +193,7 @@
       return caps[name] || null;
     }
   };
+  window.lrSb = sb;
   window.lrSignOut = () => sb && sb.auth.signOut().then(() => location.reload());
 
   document.addEventListener("DOMContentLoaded", () => {
