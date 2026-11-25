@@ -189,7 +189,7 @@ main{padding-bottom:110px}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes sparkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1);opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
-main{padding-bottom:200px}
+main{padding-bottom:240px}#ticket{scroll-margin-top:10px}
 .bring{position:fixed;left:12px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:9;border:0;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 18px 8px 8px;border-radius:999px;background:#16a36a;color:#fff;font:700 17px Mali,sans-serif;box-shadow:0 10px 24px -8px rgba(22,163,106,.7)}
 .bring svg{width:40px;height:40px;background:#fff;border-radius:50%;padding:4px}
 .items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -263,6 +263,21 @@ main{padding-bottom:200px}
 .pkey{width:72px;height:72px;border-radius:50%;border:0;background:var(--sky2);color:var(--ink);font:700 26px Mali,sans-serif;cursor:pointer}
 .pkey:active{transform:scale(.94)}
 .lineauto{width:100%;min-height:58px;border:0;border-radius:16px;background:#06c755;color:#fff;font:700 19px Mali,sans-serif;cursor:pointer;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15)}
+.sph{grid-column:1/-1}.sph summary{cursor:pointer;color:var(--sky);font-weight:600;font-size:14px;min-height:32px;display:flex;align-items:center}
+.hrs{display:grid;gap:12px}
+.hrs h3{margin:0;display:flex;justify-content:space-between;align-items:baseline}.hrs h3 b{font:700 26px Mali,sans-serif;color:var(--sky)}
+.hrbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hrbtns button{min-height:58px;border:0;border-radius:16px;font:700 18px Mali,sans-serif;cursor:pointer}
+.hrbtns .out{background:var(--sky);color:#fff}.hrbtns .back{background:var(--sun);color:#3b2b00}.hrbtns button:disabled{opacity:.45}
+.leg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:6px 8px;align-items:center;padding:8px 10px;border-radius:14px;background:var(--sky2);font-size:14px}
+.leg label{display:flex;align-items:center;gap:4px;font-weight:400}.leg .x{grid-column:3;grid-row:1}.leg .dur{grid-column:1/-1;grid-row:2;font-size:13px;color:var(--mute)}
+.leg input{min-width:0;flex:1;width:100%;font-size:16px;padding:6px 6px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.leg .dur{font-weight:700;white-space:nowrap}.leg .x{border:0;background:none;color:var(--red);font-size:20px;cursor:pointer;min-height:36px}
+.hsum{display:grid;gap:8px}.hsum .tot{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hsum .tot div{background:var(--card);border-radius:18px;padding:12px 14px;box-shadow:0 1px 0 var(--line)}
+.hsum .tot b{display:block;font:700 26px Mali,sans-serif;color:var(--sky)}
+.hsum table{width:100%;border-collapse:collapse;background:var(--card);border-radius:16px;overflow:hidden;font-size:15px}
+.hsum td{padding:9px 12px;border-top:1px solid var(--line)}.hsum td:last-child{text-align:right;font-weight:700;white-space:nowrap}
 .hint{font-size:13px;color:var(--mute);margin:6px 0 0}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:16px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;z-index:9}
 .toast.on{opacity:1;transform:translateX(-50%)}
@@ -323,7 +338,9 @@ main{padding-bottom:200px}
     <p class="status" id="fStatus" role="status"></p>
   </section>
   <section class="card" id="ticket" aria-live="polite"></section>
+  <section class="card" id="hoursDay" hidden></section>
   <section><h3 id="upTitle">Coming up</h3><div class="list" id="upcoming"></div></section>
+  <section class="hsum" id="hoursSum" hidden></section>
   <section id="placesWrap" hidden><h3 id="plTitle">Saved places</h3><div class="pgrid" id="places"></div>
     <details id="addWrap" style="margin-top:10px"><summary id="addSum">+ Save a new place</summary>
       <form class="add" id="plForm"><label><span id="lPlName">Name</span><input type="text" id="pName"></label><label><span id="lPlAddr">Address or Google Maps link</span><input type="text" id="pAddr"></label><label><span id="lPlTel">Phone (optional)</span><input type="text" id="pTel" inputmode="tel"></label><label><span id="lPlPic">Photo of the entrance (optional)</span><input type="file" id="pPic" accept="image/*"></label><div><b style="font-size:15px">Sticker (optional)</b><div class="ipick" id="pIcons" style="margin-top:6px"></div></div><div class="row"><button class="btn main" type="submit" id="pSave">Save place</button><button class="btn ghost" type="button" id="pCancel">Cancel</button></div><p class="status" id="pStatus"></p></form>
@@ -425,7 +442,7 @@ function stopHtml(s,i,th){const p=s.pid&&places[s.pid];
   let main=th?(s.labelTh||s.label||s.th||s.en):(s.label||s.en),sub=s.label?(th?(s.th||s.en):s.en):(th?(s.th&&s.th!==s.en?s.en:""):(s.th&&s.th!==s.en?s.th:""));
   if(isUrl(main))main=th?"ลิงก์แผนที่":"Map link";
   const tel=p&&p.phone?`<div><a class="tel" href="tel:${esc(p.phone.replace(/[^0-9+]/g,""))}">☎ ${esc(p.phone)}</a></div>`:"";
-  return `<li>${badge(p,s.label||(i+1)+"")}<div><div class="nm">${i+1}. ${esc(main)}</div>${sub&&!isUrl(sub)?`<div class="sub">${esc(sub)}</div>`:""}${p&&p.tip?`<div><b>★ ${esc(th?(p.tipTh||p.tip):p.tip)}</b></div>`:""}${tel}</div><a class="btn" href="${esc(mapLink(s.link||s.en))}" target="_blank" rel="noopener">${L().map}</a>${p&&okImg(p.photo)?`<img class="pimg" src="${esc(p.photo)}" alt="">`:""}</li>`}
+  return `<li>${badge(p,s.label||(i+1)+"")}<div><div class="nm">${i+1}. ${esc(main)}</div>${sub&&!isUrl(sub)?`<div class="sub">${esc(sub)}</div>`:""}${p&&p.tip?`<div><b>★ ${esc(th?(p.tipTh||p.tip):p.tip)}</b></div>`:""}${tel}</div><a class="btn" href="${esc(mapLink(s.link||s.en))}" target="_blank" rel="noopener">${L().map}</a>${p&&okImg(p.photo)?`<details class="sph"><summary>📷 ${th?"ดูรูปทางเข้า":"Entrance photo"}</summary><img class="pimg" src="${esc(p.photo)}" alt=""></details>`:""}</li>`}
 function renderTicket(){const t=trips[sel],l=L(),th=isTh(),bud=!fam(),el=$("ticket");
   if(fam()&&!$("planner").hidden){el.hidden=true;return}el.hidden=false;
   const head=`<div class="thead"><h2>${esc(fmtDay(sel,th,{weekday:"long",day:"numeric",month:"long"}))}</h2>${t?(t.status==="accepted"?`<span class="stamp${stampAnim?" anim":""}">${l.stamp}</span>`:`<span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span>`):""}</div>`;
@@ -438,13 +455,37 @@ function renderTicket(){const t=trips[sel],l=L(),th=isTh(),bud=!fam(),el=$("tick
   else acts=`<div class="row"><button class="btn ghost" type="button" data-a="copy">${l.copy}</button></div>`;
   el.innerHTML=head+`<div class="tk">
    <div class="when"><strong>${esc(t.time)}</strong><span>${l.pick}</span>${t.longTrip?`<span class="long">${l.long}</span>`:""}${t.ret?`<span>${l.back} <b>${esc(t.ret)}</b></span>`:""}</div>
+   ${acts}
    ${t.night?(()=>{const N=l.NK||T.en.NK,ks=[...(t.nightExtras||[]).filter(k=>N[k]),t.nightKind==="dawn"?"dawn":"bender"];return `<div class="nightban">🪩 ${l.nightBan}${ks.map(k=>`<span class="q">${k==="tequila"?"🥃":k==="doink"?"🌿":k==="dawn"?"🌅":"🌙"} ${esc(N[k])}</span>`).join("")}</div>`})():""}
    <ol class="stops">${(t.stops||[]).map((s,i)=>stopHtml(s,i,th)).join("")}</ol>
    ${r?`<div class="row"><a class="btn main" href="${esc(r)}" target="_blank" rel="noopener">${l.route} ↗</a></div>`:""}
    ${note?`<div class="note"><small>${l.note}</small>${esc(note)}${th&&t.noteTh&&t.note?`<small>${esc(t.note)}</small>`:""}</div>`:""}
    ${dn?`<div class="note"><small>${l.drvNote}</small>${esc(dn)}${!th&&t.driverNoteEn&&t.driverNote?`<small>${esc(t.driverNote)}</small>`:""}</div>`:""}
-   ${acts}</div>`;stampAnim=false}
-function renderUpcoming(){const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
+</div>`;stampAnim=false}
+let hours={};
+const nowHM=()=>{const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+const mins=hm=>{const m=/^(\d{1,2}):(\d{2})$/.exec(hm||"");return m?(+m[1])*60+(+m[2]):null};
+const legMins=g=>{const a=mins(g.out),b=mins(g.back);if(a==null||b==null)return 0;return b>=a?b-a:b+1440-a};
+const dayMins=k=>((hours[k]||{}).legs||[]).reduce((t,g)=>t+legMins(g),0);
+const fmtDur=m=>{const h=Math.floor(m/60),mm=m%60;return (h?h+"h ":"")+String(mm).padStart(h?2:1,"0")+"m"};
+function hoursCard(){if(!db)return"";const th=isTh(),legs=(hours[sel]||{}).legs||[],open=legs.length&&!legs[legs.length-1].back,tot=dayMins(sel);
+  return `<div class="hrs"><h3><span>⏱ ${th?"ชั่วโมงวันนี้":"Hours this day"}</span><b>${fmtDur(tot)}</b></h3>
+   <div class="hrbtns"><button class="out" type="button" data-hr="out" ${open||!canWrite?"disabled":""}>🚗 ${th?"ออกเดินทาง":"Left"}</button><button class="back" type="button" data-hr="back" ${!open||!canWrite?"disabled":""}>🏠 ${th?"กลับถึงแล้ว":"Back"}</button></div>
+   ${legs.map((g,i)=>`<div class="leg"><label>🚗<input type="time" value="${esc(g.out||"")}" data-hrin="${i}:out" aria-label="Left"></label><label>🏠<input type="time" value="${esc(g.back||"")}" data-hrin="${i}:back" aria-label="Back"></label><span class="dur">${g.back?fmtDur(legMins(g)):(th?"กำลังขับ…":"out now…")}</span>${canWrite?`<button class="x" type="button" data-hrrm="${i}" aria-label="Remove">×</button>`:""}</div>`).join("")}
+   ${legs.length?"":`<p class="hint" style="margin:0">${th?"กด ออกเดินทาง ตอนออก และ กลับถึงแล้ว ตอนกลับ":"Tap Left when you head out and Back when you're home. You can fix the times after."}</p>`}</div>`}
+async function saveHours(legs){const k=sel;try{await db.doc("hours/"+k).set({date:k,legs,updatedAt:new Date().toISOString()})}catch(e){toast(L().ro)}}
+function renderHoursSum(){const el=$("hoursSum");if(!db){el.hidden=true;return}const th=isTh(),ks=Object.keys(hours).filter(k=>dayMins(k)>0).sort().reverse();
+  if(!ks.length){el.hidden=true;return}el.hidden=false;
+  const d=new Date(),mon=new Date(d.getFullYear(),d.getMonth(),d.getDate()-((d.getDay()+6)%7)),wk=ymd(mon),mo=ymd(new Date(d.getFullYear(),d.getMonth(),1));
+  const sum=f=>ks.filter(f).reduce((t,k)=>t+dayMins(k),0);
+  el.innerHTML=`<h3>⏱ ${th?"บันทึกชั่วโมง":"Hours log"}</h3><div class="tot"><div>${th?"สัปดาห์นี้":"This week"}<b>${fmtDur(sum(k=>k>=wk))}</b></div><div>${th?"เดือนนี้":"This month"}<b>${fmtDur(sum(k=>k>=mo))}</b></div></div>
+   <table><tbody>${ks.slice(0,14).map(k=>{const g=(hours[k].legs||[]);return `<tr data-d="${k}" style="cursor:pointer"><td><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><br><span style="color:var(--mute);font-size:13px">${g.map(x=>esc(x.out||"?")+"–"+esc(x.back||"…")).join(", ")}</span></td><td>${fmtDur(dayMins(k))}</td></tr>`}).join("")}</tbody></table>`}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-hr],[data-hrrm]");if(!b||!db)return;const legs=JSON.parse(JSON.stringify((hours[sel]||{}).legs||[]));
+  if(b.dataset.hrrm!=null)legs.splice(+b.dataset.hrrm,1);else if(b.dataset.hr==="out")legs.push({out:nowHM(),back:""});else if(b.dataset.hr==="back"&&legs.length)legs[legs.length-1].back=nowHM();
+  await saveHours(legs);if(b.dataset.hr)toast(b.dataset.hr==="out"?(isTh()?"บันทึกเวลาออกแล้ว 🚗":"Left at "+nowHM()+" 🚗"):(isTh()?"บันทึกเวลากลับแล้ว 🏠":"Back at "+nowHM()+" 🏠"))});
+document.addEventListener("change",async e=>{const inp=e.target.closest("[data-hrin]");if(!inp||!db)return;const [i,f]=inp.dataset.hrin.split(":"),legs=JSON.parse(JSON.stringify((hours[sel]||{}).legs||[]));if(!legs[+i])return;legs[+i][f]=inp.value;await saveHours(legs)});
+function renderHoursDay(){const el=$("hoursDay");const h=hoursCard();el.hidden=!h;el.innerHTML=h}
+function renderUpcoming(){renderHoursSum();renderHoursDay();const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
   const ks=Object.keys(trips).filter(k=>k>=today).sort();
   $("upcoming").innerHTML=ks.length?ks.map(k=>{const t=trips[k],names=(t.stops||[]).map(s=>th?(s.labelTh||s.label||s.th||s.en):(s.label||s.en)).filter(x=>!isUrl(x));
     return `<button class="item" type="button" data-d="${k}"><div><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><div class="sub">${t.night?"✨ ":""}${esc(t.time)}</div></div><div class="sub">${esc(names.join(" → ")||l.stopsN((t.stops||[]).length))}</div><span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span></button>`}).join(""):`<p class="hint">${l.noUp}</p>`}
@@ -692,7 +733,7 @@ document.addEventListener("input",e=>{if(e.target.id!=="msgBox")return;draft=e.t
 document.addEventListener("click",e=>{const b=e.target.closest("[data-send]");if(!b)return;const v=b.dataset.send;sendCtx=v==="trip"?{kind:"trip"}:{kind:"req",id:v.slice(4)};editContact="";draft="";draftFor="";openSheet("send")});
 function thaiText(t){return cuteTrip(t,"th")}
 document.addEventListener("click",async e=>{
-  const d=e.target.closest("[data-d]");if(d){sel=d.dataset.d;editing=false;replyOpen=false;plan=null;render();if(d.classList.contains("item"))scrollTo({top:0,behavior:"smooth"});return}
+  const d=e.target.closest("[data-d]");if(d){sel=d.dataset.d;editing=false;replyOpen=false;plan=null;render();if(d.classList.contains("item"))setTimeout(()=>$("ticket").scrollIntoView({behavior:"smooth",block:"start"}),30);return}
   const pe=e.target.closest("[data-pedit]");if(pe){closeSheet();editPlace(pe.dataset.pedit);return}
   const pd=e.target.closest("[data-pdel]");if(pd&&db){closeSheet();try{await db.doc("places/"+pd.dataset.pdel).delete()}catch(err){}return}
   const a=e.target.closest("[data-a]");if(!a)return;const t=trips[sel],act=a.dataset.a;
@@ -724,6 +765,7 @@ render();
     ()=>{clearTimeout(timer);$("conn").textContent=L().late});
   db.doc("settings/buddy").onSnapshot(d=>{buddyPin=d.exists&&d.data().pin?String(d.data().pin):null},()=>{});
   if(window.lrLine)db.collection("linefollowers").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.userId)o[x.id]=v});lineFollowers=o;if(sheetOpen&&sheetKind==="send"&&editContact)renderSheet()},()=>{});
+  db.collection("hours").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.legs)o[x.id]=v});hours=o;renderHoursDay();renderHoursSum()},()=>{});
   db.collection("contacts").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});contacts=o;if(sheetOpen&&sheetKind==="send")renderSheet()},()=>{});
   db.collection("items").onSnapshot(snap=>{const o={};snap.docs.forEach(x=>{const v=x.data();if(v&&v.name)o[x.id]=v});customItems=o;if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});
   db.doc("settings/items").onSnapshot(d=>{hiddenItems=d.exists&&Array.isArray(d.data().hidden)?d.data().hidden:[];if(sheetOpen&&sheetKind==="bring")rerenderBring()},()=>{});
