@@ -140,7 +140,8 @@
       if (!/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = "Enter your email address. · ใส่อีเมล"; return; }
       b.disabled = true; msg.textContent = "";
       try {
-        const { data, error } = await sb.functions.invoke("enter", { body: { email } });
+        let { data, error } = await sb.functions.invoke("enter", { body: { email } });
+        if (error?.context?.status === 404) ({ data, error } = await sb.functions.invoke("clever-responder", { body: { email } }));
         if (error || !data?.token_hash) {
           const st = error?.context?.status;
           let code = data?.error; try { code = code || (await error?.context?.clone().json())?.error; } catch (_) {}
