@@ -866,6 +866,7 @@ render();
 (async()=>{
   const user=await claude.use("user");
   isAdult=!!(await user?.isOwner());
+  if(window.lrMember?.role==="buddy"){role="buddy";store.set("ds-role","buddy");if(!lang){lang="th";store.set("ds-lang","th")}}
   if(!lang){lang=isAdult?"en":"th";store.set("ds-lang",lang)}
   const w=await user?.can?.("data.write");if(w===false)canWrite=false;
   sample=await claude.use("sample");
