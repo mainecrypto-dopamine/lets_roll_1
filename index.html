@@ -485,13 +485,14 @@ function renderTicket(){const t=trips[sel],l=L(),th=isTh(),bud=!fam(),el=$("tick
   if(fam()&&!$("planner").hidden){el.hidden=true;return}el.hidden=false;
   const head=`<div class="thead"><h2>${esc(fmtDay(sel,th,{weekday:"long",day:"numeric",month:"long"}))}</h2>${t?(t.status==="accepted"?`<span class="stamp${stampAnim?" anim":""}">${l.stamp}</span>`:`<span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span>`):""}</div>`;
   if(!t){el.innerHTML=head+`<p class="empty">${l.none}</p>`;return}
+  const byHtml=t.bookedBy?.name?`<p style="margin:0 0 6px;font-weight:700">👤 ${th?"จองโดย":"Booked by"} ${esc(t.bookedBy.name)}</p>`:"";
   const r=routeLink(t),note=th?(t.noteTh||t.note):t.note,dn=th?t.driverNote:(t.driverNoteEn||t.driverNote);
   let acts="";
   if(bud&&canWrite&&db){acts=`<div class="row">${t.status!=="accepted"?`<button class="btn yes" type="button" data-a="accept">✓ ${l.accept}</button>`:""}${t.status!=="declined"?`<button class="btn warn" type="button" data-a="decline">${l.decline}</button>`:""}<button class="btn ghost" type="button" data-a="reply">${l.reply}</button></div>`+
     (replyOpen?`<form id="replyF" style="display:grid;gap:10px"><textarea id="rText" aria-label="${l.reply}">${esc(t.driverNote||"")}</textarea><div class="row"><button class="btn main" type="submit">${l.sendReply}</button></div><p class="status" id="rStatus"></p></form>`:"")}
   else if(!bud&&canWrite&&db)acts=`<div class="row"><button class="btn main" type="button" data-a="edit">${l.edit}</button><button class="btn ghost" type="button" data-send="trip">${l.line}</button><button class="btn ghost" type="button" data-a="copy">${l.copy}</button><button class="btn warn" type="button" data-a="del">${l.del}</button></div>`;
   else acts=`<div class="row"><button class="btn ghost" type="button" data-a="copy">${l.copy}</button></div>`;
-  el.innerHTML=head+`<div class="tk">
+  el.innerHTML=head+byHtml+`<div class="tk">
    <div class="when"><strong>${esc(t.time)}</strong><span>${l.pick}</span>${t.longTrip?`<span class="long">${l.long}</span>`:""}${t.ret?`<span>${l.back} <b>${esc(t.ret)}</b></span>`:""}</div>
    ${acts}
    ${t.night?(()=>{const N=l.NK||T.en.NK,ks=[...(t.nightExtras||[]).filter(k=>N[k]),t.nightKind==="dawn"?"dawn":"bender"];return `<div class="nightban">🪩 ${l.nightBan}${ks.map(k=>`<span class="q">${k==="tequila"?"🥃":k==="doink"?"🌿":k==="dawn"?"🌅":"🌙"} ${esc(N[k])}</span>`).join("")}</div>`})():""}
@@ -582,9 +583,11 @@ function renderPay(){const el=$("paySum");if(!db||!fam()){el.hidden=true;return}
   const ks=Object.keys(hours).filter(k=>k>=a&&k<=b&&(dayMins(k)>0||dayExp(k)>0)).sort();
   let hrsM=0,exp=0;const lines=[];
   ks.forEach(k=>{const m=dayMins(k),day=esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}));
-    if(m){hrsM+=m;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>🚗 ${day}<small>${fmtDur(m)} × ${baht(rate)}/hr</small></div><div class="amt">${baht(m/60*rate)}</div></div>`)}
+    const who=forName(k);if(m){hrsM+=m;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>🚗 ${day}${who?" · 👤 "+esc(who):""}<small>${fmtDur(m)} × ${baht(rate)}/hr</small></div><div class="amt">${baht(m/60*rate)}</div></div>`)}
     ((hours[k]||{}).expenses||[]).forEach(x=>{if(+x.amount){exp+=+x.amount;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>⛽ ${esc(x.label||(th?"ค่าใช้จ่าย":"Expense"))}${x.receipt?` <a href="${esc(x.receipt)}" target="_blank" rel="noopener" title="Receipt">🧾</a>`:""}<small>${day}</small></div><div class="amt">${baht(+x.amount)}</div></div>`)}})});
-  const drive=hrsM/60*rate,total=drive+exp;
+  const drive=hrsM/60*rate,total=drive+exp,per={};
+  ks.forEach(k=>{const w=forName(k)||(th?"บ้าน (ครอบครัว)":"Home (family)");per[w]=(per[w]||0)+dayMins(k)/60*rate+dayExp(k)});
+  const perHtml=Object.keys(per).length>1?`<div class="ln hd"><div>👤 ${th?"แยกตามคน":"By person"}</div><div></div></div>`+Object.entries(per).sort((a,b)=>b[1]-a[1]).map(([w,v])=>`<div class="ln"><div>${esc(w)}</div><div class="amt">${baht(v)}</div></div>`).join(""):"";
   const kitty=(pay.kitty||[]).filter(x=>(x.date||"")>=a&&(x.date||"")<=b),kin=kitty.reduce((t,x)=>t+(+x.amount||0),0);
   const allK=(pay.kitty||[]).reduce((t,x)=>t+(+x.amount||0),0),allCost=Object.keys(hours).reduce((t,k)=>t+dayMins(k)/60*rate+dayExp(k),0),bal=allK-allCost;
   const P={week:th?"สัปดาห์นี้":"This week",last:th?"สัปดาห์ที่แล้ว":"Last week",month:th?"เดือนนี้":"This month",all:th?"ทั้งหมด":"All time"};
@@ -596,6 +599,7 @@ function renderPay(){const el=$("paySum");if(!db||!fam()){el.hidden=true;return}
     <div class="ln tot"><div>${th?"ค่าขับรถ":"Driving"}<small>${fmtDur(hrsM)} × ${baht(rate)}/hr</small></div><div class="amt">${baht(drive)}</div></div>
     <div class="ln tot"><div>${th?"ค่าใช้จ่าย":"Expenses"}</div><div class="amt">${baht(exp)}</div></div>
     <div class="ln big"><div><b>${th?"รวมทั้งหมด":"Total"}</b><small>${P[payPeriod]}</small></div><div class="amt">${baht(total)}</div></div>
+    ${perHtml}
     ${kitty.map(x=>`<div class="ln pos"><div>💵 ${th?"เติมเงินกองกลาง":"Paid into kitty"}<small>${esc(fmtDay(x.date,th,{weekday:"short",day:"numeric",month:"short"}))}${x.note?" · "+esc(x.note):""}</small></div><div class="amt">${baht(+x.amount)}</div></div>`).join("")}
     <div class="ln big ${bal<0?"neg":"pos"}"><div><b>${bal<0?(th?"ต้องจ่ายเพิ่ม":"Still owed"):(th?"เหลือในกองกลาง":"Left in kitty")}</b><small>${th?"เงินกองกลางทั้งหมด":"All kitty money"} ${baht(allK)} − ${th?"ค่าใช้ทั้งหมด":"all costs"} ${baht(allCost)}</small></div><div class="amt">${baht(Math.abs(bal))}</div></div>
    </div>
@@ -610,6 +614,8 @@ document.addEventListener("click",async e=>{const pp=e.target.closest("[data-pp]
   const kr=e.target.closest("[data-krm]");if(kr&&db){const k=[...(pay.kitty||[])];k.splice(+kr.dataset.krm,1);try{await db.doc("settings/pay").set({...pay,kitty:k})}catch(err){}}});
 document.addEventListener("change",async e=>{if(e.target.id!=="payRate"||!db)return;const v=parseFloat(String(e.target.value).replace(/[^0-9.]/g,""));if(!(v>=0))return;try{await db.doc("settings/pay").set({...pay,rate:v})}catch(err){toast(L().ro)}});
 let qlPhoto="";
+const me=()=>{const m=window.lrMember;return m&&m.role!=="owner"&&m.role!=="buddy"?{name:m.name||String(m.email||"").split("@")[0],email:m.email||""}:null};
+const forName=k=>trips[k]?.bookedBy?.name||"";
 function renderQuick(){const el=$("quickLog");if(!db||!canWrite){el.hidden=true;return}el.hidden=false;const th=isTh(),keep={};
   el.querySelectorAll("input[id^=ql]").forEach(i=>{if(i.type!=="file")keep[i.id]=i.value});
   el.innerHTML=`<div class="ql"><h3 style="margin:0">⚡ ${th?"บันทึกด่วน":"Quick log"} <small style="font-weight:400;color:var(--mute)">${th?"วันที่ เวลา รูป แล้วกดบันทึก":"date, times, photo — save"}</small></h3>
@@ -624,14 +630,14 @@ document.addEventListener("click",async e=>{if(e.target.id!=="qlSave"||!db)retur
   if(!/^\d{4}-\d\d-\d\d$/.test(d))return toast(th?"เลือกวันที่":"Pick a date");
   if(!o&&!b&&!amt&&!qlPhoto)return toast(th?"ใส่เวลา หรือ ค่าใช้จ่าย":"Add times or an expense");
   const cur=hours[d]||{},legs=[...(cur.legs||[])],ex=[...(cur.expenses||[])];
-  if(o||b)legs.push({out:o,back:b});if(amt||qlPhoto)ex.push({label:lab||(th?"ค่าใช้จ่าย":"Expense"),amount:amt||"",...(qlPhoto?{receipt:qlPhoto}:{})});
+  if(o||b)legs.push({out:o,back:b});if(amt||qlPhoto)ex.push({label:lab||(th?"ค่าใช้จ่าย":"Expense"),amount:amt||"",...(qlPhoto?{receipt:qlPhoto}:{}),...(me()?{by:me().name}:{})});
   try{await db.doc("hours/"+d).set({date:d,legs,expenses:ex,updatedAt:new Date().toISOString()});qlPhoto="";const k=fmtDay(d,th,{weekday:"short",day:"numeric",month:"short"});
     ["qlOut","qlBack","qlAmt","qlLabel"].forEach(i=>{if($(i))$(i).value=""});renderQuick();toast((th?"บันทึกแล้ว ✓ ":"Logged ✓ ")+k)}catch(err){toast(L().ro)}});
 function renderHoursDay(){const el=$("hoursDay");const h=hoursCard();el.hidden=!h;el.innerHTML=h}
 function renderUpcoming(){renderHoursSum();renderHoursDay();if(!$("quickLog").contains(document.activeElement))renderQuick();renderPay();if(document.activeElement?.id!=="nText")renderNotes();const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
   const ks=Object.keys(trips).filter(k=>k>=today).sort();
   $("upcoming").innerHTML=ks.length?ks.map(k=>{const t=trips[k],names=(t.stops||[]).map(s=>th?(s.labelTh||s.label||s.th||s.en):(s.label||s.en)).filter(x=>!isUrl(x));
-    return `<button class="item" type="button" data-d="${k}"><div><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><div class="sub">${t.night?"✨ ":""}${esc(t.time)}</div></div><div class="sub">${esc(names.join(" → ")||l.stopsN((t.stops||[]).length))}</div><span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span></button>`}).join(""):`<p class="hint">${l.noUp}</p>`}
+    return `<button class="item" type="button" data-d="${k}"><div><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><div class="sub">${t.night?"✨ ":""}${esc(t.time)}${t.bookedBy?.name?" · 👤 "+esc(t.bookedBy.name):""}</div></div><div class="sub">${esc(names.join(" → ")||l.stopsN((t.stops||[]).length))}</div><span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span></button>`}).join(""):`<p class="hint">${l.noUp}</p>`}
 function renderPlaces(){const l=L(),f=fam();$("placesWrap").hidden=!db;$("addWrap").hidden=!f||!canWrite;
   $("plTitle").textContent=l.pl;$("addSum").textContent=editPid?$("addSum").textContent:l.addSum;$("lPlName").textContent=l.plName;$("lPlAddr").textContent=l.plAddr;$("lPlTel").textContent=l.plTel;$("lPlPic").textContent=l.plPic;if(!editPid)$("pSave").textContent=l.plSave;
   const ps=plList().filter(([,p])=>p.kind!=="hospital").sort((a,b)=>a[1].name.localeCompare(b[1].name));
@@ -795,7 +801,7 @@ $("send").addEventListener("click",async()=>{if(!db||!plan)return;const l=L();
   const tr=await translate(names,note===(trips[sel]?.note||"")&&trips[sel]?.noteTh?"":note),old=trips[sel];
   const stops=plan.stops.map((s,i)=>{const p=s.pid&&places[s.pid];return p?{en:p.address,th:p.addressTh||"",label:p.name,labelTh:p.nameTh||"",pid:s.pid,link:isUrl(p.link||"")?p.link:""}:{en:s.en,th:s.th||tr.stops[i]||""}});
   const long=$("fLong").checked,doc={date:sel,time:plan.time,night:!!(plan.night&&isAdult),nightKind:plan.night?plan.nightKind:"",nightExtras:plan.night?plan.extras.filter(k=>k==="tequila"||k==="doink"):[],longTrip:long,ret:long?$("fRet").value:"",stops,note,
-    noteTh:tr.note||(note===(old?.note||"")?(old?.noteTh||""):""),status:"pending",driverNote:old?.driverNote||"",driverNoteEn:old?.driverNoteEn||"",updatedAt:new Date().toISOString()};
+    noteTh:tr.note||(note===(old?.note||"")?(old?.noteTh||""):""),status:"pending",bookedBy:me()||old?.bookedBy||null,driverNote:old?.driverNote||"",driverNoteEn:old?.driverNoteEn||"",updatedAt:new Date().toISOString()};
   try{await db.doc("trips/"+sel).set(doc);store.set("ds-time",plan.time);$("fStatus").textContent="";
     document.querySelector(".brand .wheel").style.animationDuration=".6s";setTimeout(()=>document.querySelector(".brand .wheel").style.animationDuration="",1600);const lane=$("lane");lane.classList.remove("drive");void lane.offsetWidth;lane.classList.add("drive");toast(l.sent);
     setTimeout(()=>{editing=false;plan=null;lane.classList.remove("drive");render()},1300)}

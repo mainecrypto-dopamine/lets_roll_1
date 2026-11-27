@@ -89,7 +89,7 @@
       <b>${t ? "เพิ่มคน" : "Add someone"}</b>
       <input id="lrTEmail" type="email" placeholder="name@gmail.com">
       <input id="lrTName" placeholder="${t ? "ชื่อ (เช่น แม่, บัดดี้)" : "Name (e.g. Mum, Buddy)"}">
-      <select id="lrTRole"><option value="family">${t ? "ครอบครัว" : "Family"}</option><option value="buddy">${t ? "บัดดี้ (คนขับ)" : "Buddy (driver)"}</option><option value="work">${t ? "ที่ทำงาน" : "Work"}</option><option value="owner">${t ? "เจ้าของ (เห็นทุกอย่าง)" : "Owner (sees everything)"}</option></select>
+      <select id="lrTRole"><option value="family">${t ? "ครอบครัว" : "Family"}</option><option value="buddy">${t ? "บัดดี้ (คนขับ)" : "Buddy (driver)"}</option><option value="guest">${t ? "แขก (จองรถได้)" : "Guest (can book)"}</option><option value="work">${t ? "ที่ทำงาน" : "Work"}</option><option value="owner">${t ? "เจ้าของ (เห็นทุกอย่าง)" : "Owner (sees everything)"}</option></select>
       <button class="big pk" data-t="add">${t ? "เพิ่มเข้าทีม" : "Add to team"}</button><p id="lrTMsg" style="margin:0;color:var(--red);min-height:1.4em"></p>`);
     async function load() {
       const { data, error } = await sb.from("members").select("email,role,name").order("role");
