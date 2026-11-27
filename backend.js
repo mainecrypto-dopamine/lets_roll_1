@@ -142,7 +142,11 @@
       try {
         const { data, error } = await sb.functions.invoke("enter", { body: { email } });
         if (error || !data?.token_hash) {
-          let code = data?.error; try { code = code || (await error?.context?.json())?.error; } catch (_) {}
+          const st = error?.context?.status;
+          let code = data?.error; try { code = code || (await error?.context?.clone().json())?.error; } catch (_) {}
+          if (st === 401) throw new Error("401 — in Supabase, turn OFF 'Enforce JWT verification' on the enter function");
+          if (st === 404) throw new Error("404 — the 'enter' function isn't deployed yet (check the name is exactly enter)");
+          if (st && code && code !== "not_buddy") throw new Error(st + " — " + code);
           if (code === "not_buddy") { b.disabled = false; msg.textContent = "Not set up for quick entry. Sending you a code instead…"; el.querySelector("#lrSend").click(); return; }
           throw new Error(code || error?.message || "failed");
         }
