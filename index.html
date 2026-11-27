@@ -265,6 +265,10 @@ main{padding-bottom:240px}#ticket{scroll-margin-top:10px}
 .lineauto{width:100%;min-height:58px;border:0;border-radius:16px;background:#06c755;color:#fff;font:700 19px Mali,sans-serif;cursor:pointer;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15)}
 .sph{grid-column:1/-1}.sph summary{cursor:pointer;color:var(--sky);font-weight:600;font-size:14px;min-height:32px;display:flex;align-items:center}
 .hrs{display:grid;gap:12px}
+.ql{display:grid;gap:10px}.ql .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.ql label{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+.ql input{width:100%;min-width:0;font-size:17px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+.ql .snap{display:grid;place-items:center;min-height:52px;border-radius:14px;border:2px dashed var(--line);cursor:pointer;font-weight:700}
 .hrs h3{margin:0;display:flex;justify-content:space-between;align-items:baseline}.hrs h3 b{font:700 26px Mali,sans-serif;color:var(--sky)}
 .hrbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hrbtns button{min-height:58px;border:0;border-radius:16px;font:700 18px Mali,sans-serif;cursor:pointer}
@@ -369,6 +373,7 @@ main{padding-bottom:240px}#ticket{scroll-margin-top:10px}
   </section>
   <section class="card" id="ticket" aria-live="polite"></section>
   <section class="card" id="hoursDay" hidden></section>
+  <section class="card" id="quickLog" hidden></section>
   <section><h3 id="upTitle">Coming up</h3><div class="list" id="upcoming"></div></section>
   <section class="hsum" id="hoursSum" hidden></section>
   <section class="pay" id="paySum" hidden></section>
@@ -604,8 +609,26 @@ document.addEventListener("click",async e=>{const pp=e.target.closest("[data-pp]
   if(e.target.id==="kAdd"&&db){const amt=parseFloat(String($("kAmt").value).replace(/[^0-9.]/g,""));if(!amt)return;const k=[...(pay.kitty||[]),{date:$("kDate").value||ymd(new Date()),amount:amt}];try{await db.doc("settings/pay").set({...pay,kitty:k});toast((isTh()?"เติมเงินแล้ว ":"Added to kitty: ")+baht(amt))}catch(err){toast(L().ro)}return}
   const kr=e.target.closest("[data-krm]");if(kr&&db){const k=[...(pay.kitty||[])];k.splice(+kr.dataset.krm,1);try{await db.doc("settings/pay").set({...pay,kitty:k})}catch(err){}}});
 document.addEventListener("change",async e=>{if(e.target.id!=="payRate"||!db)return;const v=parseFloat(String(e.target.value).replace(/[^0-9.]/g,""));if(!(v>=0))return;try{await db.doc("settings/pay").set({...pay,rate:v})}catch(err){toast(L().ro)}});
+let qlPhoto="";
+function renderQuick(){const el=$("quickLog");if(!db||!canWrite){el.hidden=true;return}el.hidden=false;const th=isTh(),keep={};
+  el.querySelectorAll("input[id^=ql]").forEach(i=>{if(i.type!=="file")keep[i.id]=i.value});
+  el.innerHTML=`<div class="ql"><h3 style="margin:0">⚡ ${th?"บันทึกด่วน":"Quick log"} <small style="font-weight:400;color:var(--mute)">${th?"วันที่ เวลา รูป แล้วกดบันทึก":"date, times, photo — save"}</small></h3>
+   <div class="g"><label>📅 ${th?"วันที่":"Date"}<input type="date" id="qlDate" value="${ymd(new Date())}" max="${ymd(new Date())}"></label>
+    <label>🚗 ${th?"เริ่ม":"Start"}<input type="time" id="qlOut"></label><label>🏠 ${th?"เลิก":"Stop"}<input type="time" id="qlBack"></label></div>
+   <label class="snap">${qlPhoto?`<img src="${qlPhoto}" alt="Receipt" style="max-height:120px;border-radius:10px">`:`📷 ${th?"ถ่ายใบเสร็จ (ถ้ามี)":"Snap receipt (optional)"}`}<input type="file" accept="image/*" capture="environment" id="qlPic" hidden></label>
+   <div class="g"><label>⛽ ${th?"ค่าอะไร":"What for"}<input id="qlLabel" placeholder="${th?"น้ำมัน, ทางด่วน…":"Fuel, tolls…"}"></label><label>฿ ${th?"จำนวนเงิน":"Amount"}<input id="qlAmt" inputmode="decimal" placeholder="0"></label></div>
+   <button class="btn main" type="button" id="qlSave" style="min-height:52px;font-size:18px">✓ ${th?"บันทึก":"Log it"}</button></div>`;
+  Object.entries(keep).forEach(([k,v])=>{const i=$(k);if(i&&v)i.value=v})}
+document.addEventListener("change",async e=>{if(e.target.id!=="qlPic"||!e.target.files?.[0])return;try{qlPhoto=await shrink(e.target.files[0],900);renderQuick();$("qlAmt")?.focus()}catch(_){toast(isTh()?"เปิดรูปไม่ได้":"Couldn't read that photo")}});
+document.addEventListener("click",async e=>{if(e.target.id!=="qlSave"||!db)return;const th=isTh(),d=$("qlDate").value,o=$("qlOut").value,b=$("qlBack").value,amt=parseFloat(String($("qlAmt").value).replace(/[^0-9.]/g,""))||0,lab=$("qlLabel").value.trim();
+  if(!/^\d{4}-\d\d-\d\d$/.test(d))return toast(th?"เลือกวันที่":"Pick a date");
+  if(!o&&!b&&!amt&&!qlPhoto)return toast(th?"ใส่เวลา หรือ ค่าใช้จ่าย":"Add times or an expense");
+  const cur=hours[d]||{},legs=[...(cur.legs||[])],ex=[...(cur.expenses||[])];
+  if(o||b)legs.push({out:o,back:b});if(amt||qlPhoto)ex.push({label:lab||(th?"ค่าใช้จ่าย":"Expense"),amount:amt||"",...(qlPhoto?{receipt:qlPhoto}:{})});
+  try{await db.doc("hours/"+d).set({date:d,legs,expenses:ex,updatedAt:new Date().toISOString()});qlPhoto="";const k=fmtDay(d,th,{weekday:"short",day:"numeric",month:"short"});
+    ["qlOut","qlBack","qlAmt","qlLabel"].forEach(i=>{if($(i))$(i).value=""});renderQuick();toast((th?"บันทึกแล้ว ✓ ":"Logged ✓ ")+k)}catch(err){toast(L().ro)}});
 function renderHoursDay(){const el=$("hoursDay");const h=hoursCard();el.hidden=!h;el.innerHTML=h}
-function renderUpcoming(){renderHoursSum();renderHoursDay();renderPay();if(document.activeElement?.id!=="nText")renderNotes();const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
+function renderUpcoming(){renderHoursSum();renderHoursDay();if(!$("quickLog").contains(document.activeElement))renderQuick();renderPay();if(document.activeElement?.id!=="nText")renderNotes();const l=L(),th=isTh(),bud=!fam(),today=ymd(new Date());$("upTitle").textContent=l.up;
   const ks=Object.keys(trips).filter(k=>k>=today).sort();
   $("upcoming").innerHTML=ks.length?ks.map(k=>{const t=trips[k],names=(t.stops||[]).map(s=>th?(s.labelTh||s.label||s.th||s.en):(s.label||s.en)).filter(x=>!isUrl(x));
     return `<button class="item" type="button" data-d="${k}"><div><b>${esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}))}</b><div class="sub">${t.night?"✨ ":""}${esc(t.time)}</div></div><div class="sub">${esc(names.join(" → ")||l.stopsN((t.stops||[]).length))}</div><span class="pill ${esc(t.status)}">${l[t.status]||l.pending}</span></button>`}).join(""):`<p class="hint">${l.noUp}</p>`}
