@@ -563,7 +563,7 @@ document.addEventListener("click",async e=>{const t=e.target;
   const ap=t.closest("[data-napply]");if(ap&&db){await applyNote(ap.dataset.napply);return}
   const rm=t.closest("[data-nrm]");if(rm&&db){try{await db.doc("notes/"+rm.dataset.nrm).delete()}catch(err){toast(L().ro)}}});
 let pay={rate:200,kitty:[]},payPeriod="week";
-const baht=n=>"฿"+Math.round(n).toLocaleString("en-US");
+const baht=n=>"฿"+(Math.round(n*100)/100).toLocaleString("en-US",{maximumFractionDigits:2});
 function periodRange(){const d=new Date(),t=ymd(d);if(payPeriod==="week"){const m=new Date(d.getFullYear(),d.getMonth(),d.getDate()-((d.getDay()+6)%7));return[ymd(m),t]}
   if(payPeriod==="last"){const m=new Date(d.getFullYear(),d.getMonth(),d.getDate()-((d.getDay()+6)%7)-7),e=new Date(m.getFullYear(),m.getMonth(),m.getDate()+6);return[ymd(m),ymd(e)]}
   if(payPeriod==="month")return[ymd(new Date(d.getFullYear(),d.getMonth(),1)),t];return["0000-00-00","9999-12-31"]}
@@ -572,7 +572,7 @@ function renderPay(){const el=$("paySum");if(!db||!fam()){el.hidden=true;return}
   let hrsM=0,exp=0;const lines=[];
   ks.forEach(k=>{const m=dayMins(k),day=esc(fmtDay(k,th,{weekday:"short",day:"numeric",month:"short"}));
     if(m){hrsM+=m;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>🚗 ${day}<small>${fmtDur(m)} × ${baht(rate)}/hr</small></div><div class="amt">${baht(m/60*rate)}</div></div>`)}
-    ((hours[k]||{}).expenses||[]).forEach(x=>{if(+x.amount){exp+=+x.amount;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>⛽ ${esc(x.label||(th?"ค่าใช้จ่าย":"Expense"))}<small>${day}</small></div><div class="amt">${baht(+x.amount)}</div></div>`)}})});
+    ((hours[k]||{}).expenses||[]).forEach(x=>{if(+x.amount){exp+=+x.amount;lines.push(`<div class="ln" data-d="${k}" style="cursor:pointer"><div>⛽ ${esc(x.label||(th?"ค่าใช้จ่าย":"Expense"))}${x.receipt?` <a href="${esc(x.receipt)}" target="_blank" rel="noopener" title="Receipt">🧾</a>`:""}<small>${day}</small></div><div class="amt">${baht(+x.amount)}</div></div>`)}})});
   const drive=hrsM/60*rate,total=drive+exp;
   const kitty=(pay.kitty||[]).filter(x=>(x.date||"")>=a&&(x.date||"")<=b),kin=kitty.reduce((t,x)=>t+(+x.amount||0),0);
   const allK=(pay.kitty||[]).reduce((t,x)=>t+(+x.amount||0),0),allCost=Object.keys(hours).reduce((t,k)=>t+dayMins(k)/60*rate+dayExp(k),0),bal=allK-allCost;
@@ -588,6 +588,7 @@ function renderPay(){const el=$("paySum");if(!db||!fam()){el.hidden=true;return}
     ${kitty.map(x=>`<div class="ln pos"><div>💵 ${th?"เติมเงินกองกลาง":"Paid into kitty"}<small>${esc(fmtDay(x.date,th,{weekday:"short",day:"numeric",month:"short"}))}${x.note?" · "+esc(x.note):""}</small></div><div class="amt">${baht(+x.amount)}</div></div>`).join("")}
     <div class="ln big ${bal<0?"neg":"pos"}"><div><b>${bal<0?(th?"ต้องจ่ายเพิ่ม":"Still owed"):(th?"เหลือในกองกลาง":"Left in kitty")}</b><small>${th?"เงินกองกลางทั้งหมด":"All kitty money"} ${baht(allK)} − ${th?"ค่าใช้ทั้งหมด":"all costs"} ${baht(allCost)}</small></div><div class="amt">${baht(Math.abs(bal))}</div></div>
    </div>
+   ${(()=>{const rc=Object.keys(hours).sort().reverse().flatMap(k=>((hours[k]||{}).expenses||[]).filter(x=>x.receipt).map(x=>({...x,k})));return rc.length?`<details open><summary style="cursor:pointer;font-weight:700">🧾 ${th?"ใบเสร็จ":"Receipts"} (${rc.length})</summary><div class="nthumbs" style="margin-top:8px">${rc.map(x=>`<a href="${esc(x.receipt)}" target="_blank" rel="noopener" style="display:grid;gap:2px;font-size:12px;text-align:center;color:var(--ink);text-decoration:none"><img src="${esc(x.receipt)}" alt="Receipt ${esc(x.label)}" style="width:84px;height:110px">${esc(x.label)}<br>${baht(+x.amount)}</a>`).join("")}</div></details>`:""})()}
    ${isAdult&&canWrite?`<div class="payset"><label>${th?"ค่าจ้างต่อชั่วโมง (฿)":"Hourly rate (฿)"}<input id="payRate" inputmode="decimal" value="${esc(rate)}"></label>
      <label>${th?"เติมเงินกองกลาง (฿)":"Add to kitty (฿)"}<input id="kAmt" inputmode="decimal" placeholder="15000"></label>
      <label>${th?"วันที่":"Date"}<input id="kDate" type="date" value="${ymd(new Date())}"></label>
