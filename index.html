@@ -617,11 +617,25 @@ function renderPay(){const el=$("paySum");if(!db||!fam()){el.hidden=true;return}
     <div class="ln big ${bal<0?"neg":"pos"}"><div><b>${bal<0?(th?"ต้องจ่ายเพิ่ม":"Still owed"):(th?"เหลือในกองกลาง":"Left in kitty")}</b><small>${th?"เงินกองกลางทั้งหมด":"All kitty money"} ${baht(allK)} − ${th?"ค่าใช้ทั้งหมด":"all costs"} ${baht(allCost)}</small></div><div class="amt">${baht(Math.abs(bal))}</div></div>
    </div>
    ${(()=>{const rc=Object.keys(hours).sort().reverse().flatMap(k=>((hours[k]||{}).expenses||[]).filter(x=>x.receipt).map(x=>({...x,k})));return rc.length?`<details open><summary style="cursor:pointer;font-weight:700">🧾 ${th?"ใบเสร็จ":"Receipts"} (${rc.length})</summary><div class="nthumbs" style="margin-top:8px">${rc.map(x=>`<a href="${esc(x.receipt)}" target="_blank" rel="noopener" style="display:grid;gap:2px;font-size:12px;text-align:center;color:var(--ink);text-decoration:none"><img src="${esc(x.receipt)}" alt="Receipt ${esc(x.label)}" style="width:84px;height:110px">${esc(x.label)}<br>${baht(+x.amount)}</a>`).join("")}</div></details>`:""})()}
+   ${isAdult?`<div style="display:grid;grid-template-columns:${pay.qr?"1fr auto":"1fr"};gap:8px">${pay.qr?`<button class="btn main" type="button" id="qrShow" style="min-height:56px;font-size:18px">📲 ${th?"เติมเงิน — สแกน QR":"Top up — show QR"}</button>`:""}${canWrite?`<label class="btn ghost" style="cursor:pointer;display:grid;place-items:center;min-height:56px">${pay.qr?(th?"เปลี่ยน QR":"Change QR"):"📲 "+(th?"เพิ่ม QR สำหรับเติมเงิน":"Add top-up QR code")}<input type="file" accept="image/*" id="qrPic" hidden></label>`:""}</div>`:""}
    ${isAdult&&canWrite?`<div class="payset"><label>${th?"ค่าจ้างต่อชั่วโมง (฿)":"Hourly rate (฿)"}<input id="payRate" inputmode="decimal" value="${esc(rate)}"></label>
      <label>${th?"เติมเงินกองกลาง (฿)":"Add to kitty (฿)"}<input id="kAmt" inputmode="decimal" placeholder="15000"></label>
      <label>${th?"วันที่":"Date"}<input id="kDate" type="date" value="${ymd(new Date())}"></label>
      <button class="btn main" type="button" id="kAdd">+ ${th?"เติมเงิน":"Add to kitty"}</button></div>
      ${(pay.kitty||[]).length?`<details><summary style="cursor:pointer;color:var(--sky);font-weight:600">${th?"แก้ไขรายการเติมเงิน":"Edit kitty payments"}</summary>${(pay.kitty||[]).map((x,i)=>`<div class="ln" style="display:flex;justify-content:space-between;gap:8px;padding:8px 0"><span>${esc(x.date)} · ${baht(+x.amount)}</span><button class="btn warn" type="button" data-krm="${i}">×</button></div>`).join("")}</details>`:""}`:""}`}
+document.addEventListener("change",async e=>{if(e.target.id!=="qrPic"||!e.target.files?.[0]||!db)return;try{const u=await shrink(e.target.files[0],1100);await db.doc("settings/pay").set({...pay,qr:u});toast(isTh()?"บันทึก QR แล้ว":"QR saved")}catch(err){toast(L().ro)}});
+function showQR(){const th=isTh(),o=document.createElement("div");o.id="qrOver";o.style.cssText="position:fixed;inset:0;z-index:60;background:#fff;display:grid;place-items:center;padding:20px;overflow:auto";
+  o.innerHTML=`<div style="display:grid;gap:14px;justify-items:center;width:min(100%,460px);color:#111">
+   <b style="font-size:20px">📲 ${th?"เติมเงินกองกลาง":"Top up the kitty"}</b>
+   <img src="${pay.qr}" alt="Top-up QR code" style="width:100%;height:auto;border-radius:12px">
+   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;width:100%"><input id="qrAmt" inputmode="decimal" placeholder="${th?"จำนวนที่โอน (฿)":"Amount sent (฿)"}" style="font-size:18px;padding:12px;border:2px solid #ddd;border-radius:12px;min-width:0">
+   <button class="btn main" type="button" id="qrLog" style="min-height:52px">✓ ${th?"บันทึก":"Log it"}</button></div>
+   <button class="btn ghost" type="button" id="qrClose" style="min-height:52px;width:100%">${th?"ปิด":"Close"}</button></div>`;
+  document.body.appendChild(o)}
+document.addEventListener("click",async e=>{const id=e.target.id;
+  if(id==="qrShow"){showQR();return}
+  if(id==="qrClose"){$("qrOver")?.remove();return}
+  if(id==="qrLog"&&db){const amt=parseFloat(String($("qrAmt").value).replace(/[^0-9.]/g,""));if(!amt)return;try{await db.doc("settings/pay").set({...pay,kitty:[...(pay.kitty||[]),{date:ymd(new Date()),amount:amt,note:"QR top-up"}]});$("qrOver")?.remove();toast((isTh()?"เติมเงินแล้ว ":"Added to kitty: ")+baht(amt))}catch(err){toast(L().ro)}}});
 document.addEventListener("click",async e=>{const pp=e.target.closest("[data-pp]");if(pp){payPeriod=pp.dataset.pp;renderPay();return}
   if(e.target.id==="kAdd"&&db){const amt=parseFloat(String($("kAmt").value).replace(/[^0-9.]/g,""));if(!amt)return;const k=[...(pay.kitty||[]),{date:$("kDate").value||ymd(new Date()),amount:amt}];try{await db.doc("settings/pay").set({...pay,kitty:k});toast((isTh()?"เติมเงินแล้ว ":"Added to kitty: ")+baht(amt))}catch(err){toast(L().ro)}return}
   const kr=e.target.closest("[data-krm]");if(kr&&db){const k=[...(pay.kitty||[])];k.splice(+kr.dataset.krm,1);try{await db.doc("settings/pay").set({...pay,kitty:k})}catch(err){}}});
