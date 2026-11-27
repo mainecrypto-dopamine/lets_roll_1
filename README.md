@@ -71,3 +71,9 @@ insert into members (email, role, name) values ('name@gmail.com', 'family', 'Mum
 ```
 
 Roles: `owner` (sees TIME TO RAGE and Bring me), `buddy`, `family`.
+
+## Quick entry for the buddy (no code, no password)
+1. In Supabase, go to **Edge Functions → Deploy a new function → Via editor**, name it `enter`, paste `supabase/functions/enter/index.ts`, turn **Enforce JWT verification OFF**, and deploy.
+2. Add the buddy's email in the app under ☰ → Team with role **buddy**.
+3. Send the buddy `https://YOUR-APP/#enter=their@email.com`. Opening it signs them in once; after that the app opens straight in.
+Only members with role `buddy` can use quick entry. Anyone who has that link can open the buddy view, so share it only with the buddy.
