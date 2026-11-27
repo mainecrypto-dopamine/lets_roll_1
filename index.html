@@ -643,10 +643,13 @@ document.addEventListener("change",async e=>{if(e.target.id!=="payRate"||!db)ret
 let visits={},dropBusy=false,visQ="",visShow=15;
 const mapUrl=v=>`https://www.google.com/maps/search/?api=1&query=${v.lat},${v.lng}`;
 function renderDrop(){const el=$("dropBox");if(!db||!canWrite){el.hidden=true;return}el.hidden=false;const th=isTh(),q=visQ.toLowerCase();
-  const all=Object.entries(visits).sort((a,b)=>(b[1].at||"").localeCompare(a[1].at||""));
+  const all=Object.entries(visits).sort((a,b)=>(b[1].date||"").localeCompare(a[1].date||"")||(a[1].at||"").localeCompare(b[1].at||""));
+  const tm=v=>new Date(v.at).toLocaleTimeString(th?"th-TH":"en-GB",{hour:"2-digit",minute:"2-digit"});
+  const dayRoute=d=>{const ps=all.filter(([,v])=>v.date===d).map(([,v])=>v);if(ps.length<2)return"";const c=v=>v.lat+","+v.lng;
+    return `https://www.google.com/maps/dir/?api=1&origin=${c(ps[0])}&destination=${c(ps[ps.length-1])}${ps.length>2?"&waypoints="+ps.slice(1,-1).slice(0,9).map(c).join("|"):""}`};
   const list=all.filter(([,v])=>!q||(v.name||"").toLowerCase().includes(q)||(v.date||"").includes(q)||(v.note||"").toLowerCase().includes(q));
-  let last="",html="";list.slice(0,visShow).forEach(([id,v])=>{if(v.date!==last){last=v.date;html+=`<div class="vday">${esc(fmtDay(v.date,th,{weekday:"short",day:"numeric",month:"short"}))}</div>`}
-    html+=`<div class="vis"><div class="t"><b>📍 ${esc(v.name||(th?"หมุดที่ปัก":"Dropped pin"))}</b><small>${esc(new Date(v.at).toLocaleTimeString(th?"th-TH":"en-GB",{hour:"2-digit",minute:"2-digit"}))}${v.by?" · "+esc(v.by):""}</small></div>
+  let last="",html="";list.slice(0,visShow).forEach(([id,v])=>{if(v.date!==last){last=v.date;const ps=all.filter(([,x])=>x.date===v.date),rt=dayRoute(v.date);html+=`<div class="vday" style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span>${esc(fmtDay(v.date,th,{weekday:"short",day:"numeric",month:"short"}))} · ${ps.length} ${th?"หมุด":"pins"} · ${tm(ps[0][1])}–${tm(ps[ps.length-1][1])}</span>${rt?`<a href="${rt}" target="_blank" rel="noopener" style="font-size:14px;font-weight:700">🗺 ${th?"เส้นทางวันนี้":"Day's route"}</a>`:""}</div>`}
+    html+=`<div class="vis"><div class="t"><b><span style="font:800 18px Mali,sans-serif;color:var(--sky)">${esc(tm(v))}</span> 📍 ${esc(v.name||(th?"หมุดที่ปัก":"Dropped pin"))}</b><small>${v.by?esc(v.by):""}</small></div>
      ${v.photo?`<a href="${v.photo}" target="_blank" rel="noopener"><img src="${v.photo}" alt="Photo" style="max-height:110px;border-radius:10px"></a>`:""}
      <div class="r"><input value="${esc(v.name||"")}" data-vname="${id}" placeholder="${th?"ตั้งชื่อที่นี่…":"Name this place…"}" aria-label="Name"></div>
      <div class="r"><a href="${mapUrl(v)}" target="_blank" rel="noopener">🗺 ${th?"แผนที่":"Map"}</a>
